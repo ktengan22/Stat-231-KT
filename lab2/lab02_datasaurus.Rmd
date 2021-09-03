@@ -186,8 +186,8 @@ dino_data <- datasaurus_dozen %>%
 # Compute correlation between `x` and `y` for `dino` dataset with label `r`
 dino_data %>%
   summarize(r = cor(x, y))%>% 
-  kable(booktabs = TRUE) #%>% 
-  #kable_styling()
+  kable(booktabs = TRUE) %>% 
+  kable_styling()
 ```
 
 
@@ -216,7 +216,7 @@ TIME TO KNIT & COMMIT: "Add answers to 2.1, 2.2"
 ## <!-- 2.3 -->Now calculate the correlation coefficient between `x` and `y` for the `star` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficient from the `dino` dataset?
 
 
-```{r dino-cor}
+```{r star-cor}
 # Start with `datasaurus_dozen`
 # Filter for observations where `dataset == "dino"`
 # Store the resulting filtered data frame as a new data frame called `dino_data`
@@ -226,8 +226,8 @@ dino_data2 <- datasaurus_dozen %>%
 # Compute correlation between `x` and `y` for `dino` dataset with label `r`
 dino_data %>%
   summarize(r = cor(x, y))%>% 
-  kable(booktabs = TRUE) #%>% 
-  #kable_styling()
+  kable(booktabs = TRUE) %>% 
+  kable_styling()
 ```
 
 
@@ -235,7 +235,7 @@ dino_data %>%
 
 > Very cool! No, the points on the scatter plot are now in the shape of a star.
 
-```{r dino-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
+```{r star-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
 ggplot(data = dino_data2, mapping = aes(x = x, y = y)) +
   geom_point()
 ```
@@ -248,11 +248,27 @@ TIME TO KNIT & COMMIT: "Add answers to 2.3, 2.4"
 
 ## <!-- 2.5 -->Now calculate the correlation coefficient between `x` and `y` for the `circle` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficients from the other two datasets?
 
+```{r circle-cor}
+# Start with `datasaurus_dozen`
+# Filter for observations where `dataset == "dino"`
+# Store the resulting filtered data frame as a new data frame called `dino_data`
+dino_data3 <- datasaurus_dozen %>%
+  filter(dataset == "circle")
 
+# Compute correlation between `x` and `y` for `dino` dataset with label `r`
+dino_data %>%
+  summarize(r = cor(x, y))%>% 
+  kable(booktabs = TRUE) %>% 
+  kable_styling()
+```
 
 
 ## <!-- 2.6 -->Plot `y` versus `x` for the `circle` dataset.  Does the plot look the same as either plot from the other two datasets?
 
+```{r circle-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
+ggplot(data = dino_data3, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
 
 
 
