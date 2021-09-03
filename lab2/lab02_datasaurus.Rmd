@@ -141,9 +141,9 @@ To find out more about the dataset, type the following in your Console: `?datasa
 
 ## <!-- 1.2 -->Based on the help file, what variables are included in the data frame? Use Markdown formatting to provide a bulleted list, with each variable typeset in monotype font.
 
-+dataset
-+x
-+y
+* dataset
+* x
+* y
 
 
 ## <!-- 1.3 -->How many observations are in each dataset within this larger data frame? Let's make a *frequency table* of the of the `dataset` variable to find out. 
@@ -174,6 +174,8 @@ After you've added your responses to 1.1, 1.2, and 1.3, knit to make sure things
 
 ## <!-- 2.1 -->Calculate the correlation coefficient, $r$, between `x` and `y` for the `dino` dataset.  Below is the code you will need to complete this exercise. Basically, the answer is already given, but you need to include relevant bits in your Rmd document and successfully knit it and view the results.  *What does this correlation coefficient tell us about the relationship between `x` and `y` in the `dino` dataset?*
 
+> The correlation coefficient between x and y is -0.06. This is essentially a very weak (insignificant), slightly negative relationship. 
+
 ```{r dino-cor}
 # Start with `datasaurus_dozen`
 # Filter for observations where `dataset == "dino"`
@@ -183,7 +185,9 @@ dino_data <- datasaurus_dozen %>%
 
 # Compute correlation between `x` and `y` for `dino` dataset with label `r`
 dino_data %>%
-  summarize(r = cor(x, y))
+  summarize(r = cor(x, y))%>% 
+  kable(booktabs = TRUE) #%>% 
+  #kable_styling()
 ```
 
 
@@ -191,11 +195,13 @@ dino_data %>%
 
 ## <!-- 2.2 -->Now, plot `y` vs. `x` for the `dino` dataset using the `ggplot()` function. Its first argument is the data you're visualizing. Next we define the `aes`thetic mappings. In other words, the columns of the data that get mapped to certain aesthetic features of the plot, e.g. the $x$ axis will represent the variable called `x` and the $y$ axis will represent the variable called `y`. Then, we add another layer to this plot where we define which `geom`etric shapes we want to use to represent each observation in the data. In this case we want these to be points, hence `geom_point`. *What do you notice now about the relationship between x and y?* 
 
+> It is incredibly fascinating that the scatterplot of x and y form an outline of a t-rex. There is no strong linear relationship. Looking at the points as a whole, it is not homoscedastic. 
+
 > *Note*: Overwhelmed by this information?! Don't worry!!  You will learn about the philosophy of building data visualizations in detail next week. For now, follow along with the code that is provided.
 \normalfont
 
 <!-- set `eval = TRUE` to make sure the plot is displayed in the knitted pdf -->
-```{r dino-plot, eval = FALSE, fig.width = 2.5, fig.height = 2}
+```{r dino-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
 ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
   geom_point()
 ```
