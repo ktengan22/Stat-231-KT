@@ -188,6 +188,7 @@ dino_data %>%
   summarize(r = cor(x, y))%>% 
   kable(booktabs = TRUE) %>% 
   kable_styling()
+latex_options = "hold_position"
 ```
 
 
@@ -215,6 +216,7 @@ TIME TO KNIT & COMMIT: "Add answers to 2.1, 2.2"
 
 ## <!-- 2.3 -->Now calculate the correlation coefficient between `x` and `y` for the `star` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficient from the `dino` dataset?
 
+> r is -0.0629. This barely differs from the other dino dataset. However, the scatter plot differs a lot. 
 
 ```{r star-cor}
 # Start with `datasaurus_dozen`
@@ -224,10 +226,11 @@ dino_data2 <- datasaurus_dozen %>%
   filter(dataset == "star")
 
 # Compute correlation between `x` and `y` for `dino` dataset with label `r`
-dino_data %>%
+dino_data2 %>%
   summarize(r = cor(x, y))%>% 
   kable(booktabs = TRUE) %>% 
   kable_styling()
+latex_options = "hold_position"
 ```
 
 
@@ -256,14 +259,18 @@ dino_data3 <- datasaurus_dozen %>%
   filter(dataset == "circle")
 
 # Compute correlation between `x` and `y` for `dino` dataset with label `r`
-dino_data %>%
+dino_data3 %>%
   summarize(r = cor(x, y))%>% 
   kable(booktabs = TRUE) %>% 
   kable_styling()
+latex_options = "hold_position"
 ```
 
+> r is now -0.068, which differs just slightly from the other two datasets. 
 
 ## <!-- 2.6 -->Plot `y` versus `x` for the `circle` dataset.  Does the plot look the same as either plot from the other two datasets?
+
+> No, now the pattern on the scatterplot is a circle. 
 
 ```{r circle-plot, eval = TRUE, fig.width = 2.5, fig.height = 2}
 ggplot(data = dino_data3, mapping = aes(x = x, y = y)) +
@@ -326,7 +333,7 @@ If there's more time in class, I encourage you to continue on with the additiona
 * `prompt = TRUE`: 
 * `collapse = TRUE`: 
 
-```{r test-chunk-options}
+```{r test-chunk-options, echo = FALSE}
 # Correlations by dataset (plain R output)
 datasaurus_dozen %>%
   group_by(dataset) %>%
