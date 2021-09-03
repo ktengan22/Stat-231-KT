@@ -280,7 +280,7 @@ TIME TO KNIT & COMMIT: "Add answers to 2.5, 2.6"
 # <!-- 3 -->**Making things more efficient** The previous problem had a lot of repetition. To make things more efficient, we can plot all the datasets at one using *facets*, and we can compute all the correlations at once using the `group_by()` function. The code is provided below.
 
 <!-- set `eval = TRUE` and adjust the figure dimensions so things don't look smushed in the pdf -->
-```{r plots-cors, eval = FALSE}
+```{r plots-cors, eval = TRUE, fig.width = 2.5, fig.height = 4}
 # Scatterplots by dataset
 ggplot(datasaurus_dozen, aes(x = x, y = y, color = dataset))+
   geom_point()+
@@ -296,12 +296,12 @@ datasaurus_dozen %>%
 
 ## <!-- 3.1 -->What do you notice?  Is the correlation coefficient an appropriate summary for any of these datasets?  Why or why not?
 
-
+> I would argue that the correlation coefficient is not an appropriate summary of these datasets. Looking at the table, the r is essentially the exact same for every single dataset. However, visually we see that they differ absolutely significantly by shape and design. A better indicator would be looking at the scatterplots or performing other tests to check the significance of the x and y relationship. 
 
 
 ## <!-- 3.2 -->What do you think `ncol = 3` does in the code above? What about `digits = 3`?
 
-
+> I think that ncol = 3 refers to making 3 columns in the output. We see this visually. I would take a guess and say that digits = 3 presents the correlation coefficients values up to 3 places after the decimal point. Every values goes to the thousandths place. 
 
 
 <!-- 
