@@ -107,10 +107,10 @@ data(CIACountries)
 
 # define the plot object
 g <- ggplot(data = CIACountries, aes(y = gdp, x = educ))
-g + geom_text(aes(label = country, color = net_users), size = 3)
+
 
 # print the plot
-g
+g + geom_text(aes(label = country, color = net_users), size = 3)
 ```
 
 
@@ -137,7 +137,8 @@ g3 + geom_text(aes(label = country, color = net_users), size = 3)
 ## <!-- 1.4 -->Lastly, Section 3.1.2 discusses *scale*, and demonstrates how to display GDP on a logarithmic scale to better discern differences in GDP.  Update the figure so GDP is on a log10 scale. 
 
 ```{r, fig.width = 3.6, fig.height = 2.4}
-g4 <- ggplot(data = CIACountries, aes(y = gdp, x = educ))
+g4 <- ggplot(data = CIACountries, aes(y = gdp, x = educ)) + 
+  theme(legend.position = "top")
 g4 + geom_text(aes(label = country, color = net_users), size = 3) + labs(x = "% of GDP spent on education", y = "Gross Domestic Product (GDP)") + coord_trans(y = "log10")
 ```
 
@@ -152,7 +153,7 @@ Have you been knitting, committing, and pushing the Rmd file?! If not, now's the
 
 ## <!-- 2.1 -->Consider Figure 3.8 in Section 3.1.5.  What does `reorder(drg, mean_charge)` do?  To figure this out, recreate the plot, but use `x = drg` instead of `x = reorder(drg, mean_charge)`.  What happens?
 
-
+>the x = drg puts the x values in order of numerical order, while x = reorder function, puts the x values in order of mean charge ascending. 
 
 ```{r}
 data(MedicareCharges)
@@ -161,7 +162,14 @@ ChargesNJ <- MedicareCharges %>%
   filter(stateProvider == "NJ")
 
 # create the plot object
-p <- 
+p <- ggplot(
+  data = ChargesNJ, 
+  aes(x = drg, y = mean_charge)
+) +
+  geom_col(fill = "gray") +
+  ylab("Statewide Average Charges ($)") + 
+  xlab("Medical Procedure (DRG)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(0.5)))
   
   
 # print the plot
@@ -169,10 +177,20 @@ p
 ```
 
 
-## <!-- 2.2 -->Replace `x = drg` with `x = reorder(drg, mean_charge)`, but also remove the `theme()` line.  Now what happens?  What was the purpose of the `theme()` line?  *Hint: You may need to knit the document and look at the pdf to better observe what's happening.*
+## <!-- 2.2 -->Replace `x = drg` with `x = reorder(drg, mean_charge)`, but also remove the `theme()` line.  Now what happens?  What was the purpose of the `theme()` line?  *Hint: You may need to knit the document and look at the pdf to better observe what's happening.* 
+
+> The purpose of the theme line was to rotate the x-axis lables 90 degrees. When I removed the theme line, the x-axis is much more difficult to read. 
 
 ```{r}
+p <- ggplot(
+  data = ChargesNJ, 
+  aes(x = reorder(drg, mean_charge), y = mean_charge)
+) +
+  geom_col(fill = "gray") +
+  ylab("Statewide Average Charges ($)") + 
+  xlab("Medical Procedure (DRG)") 
 
+p
 ```
 
 
@@ -183,9 +201,9 @@ Don't forget to commit and push!
 <!-- PROBLEM 3 ---------------------------------------------------------------->
 # <!-- 3 -->**Historical baby names** As you read through (or, even better, as you code along with...) the extended example on historical baby names in Section 3.3.1, write down two questions you have about any of the R code used in that example.  Your questions could be about what a specific part of the code---ggplot or not---is actually doing, or a more general question about any of the commands used. Please be thoughtful about your questions; we will use them (anonymously) in an exercise in class this week.
 
-1.
+1. I am not too familiar with probability. Why would setting the probability to 0.5 give us the median?
 
-2.
+2. I would like to learn how to better use the %+% function and how that differs from a pipe operator. 
 
 \clearpage
 <!-- You are not required to code along with the section, but this is good practice that is strongly encouraged. Here's a code chunk to get you started...
@@ -206,6 +224,7 @@ name_plot <- name_plot +
   )
 
 name_plot
+
 ```
 
 <!--
