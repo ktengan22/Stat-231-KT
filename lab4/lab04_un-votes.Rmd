@@ -172,7 +172,7 @@ ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes,
        subtitle = "UN General Assembly, 1946 to 2019",
        y = "% Yes",
        x = "Year",
-       color = "country") #capitalization of the name matters 
+       color = "Country", shape = "Country") #capitalization of the name matters 
 ```
 
 <!--
@@ -192,7 +192,7 @@ ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes,
        subtitle = "UN General Assembly, 1946 to 2019",
        y = "% Yes",
        x = "Year",
-       color = "country", lty = "country") #capitalization of the name matters 
+       color = "Country", lty = "Country", shape = "Country") #capitalization of the name matters - make sure all "Country" are spelled the same sand case sensitive
 ```
 
 <!--
@@ -209,16 +209,32 @@ KNIT & COMMIT & PUSH: "Add part 3 answers"
 
 
 ```{r brewer, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_point(aes(shape = country, color = country)) +
+  geom_smooth(aes(lty = country), method = "loess", se = FALSE) + scale_color_brewer() +
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "country", lty = "country") #capitalization of the name matters 
 ```
 
 ## <!-- 4.2 -->Within the `scale_color_brewer()` function, add the options `type = "div"` and `palette = 1`.  Is this a good color scheme for this figure?  Why or why not? (Can you think of a figure for which this would be a good color scheme?)
 
 
-
+> no because color blindness; and you can't see India
 
 ```{r brewer-options, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_point(aes(shape = country, color = country)) +
+  geom_smooth(aes(lty = country), method = "loess", se = FALSE) + scale_color_brewer(type = "div", palette = 1) +
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "country", lty = "country") #capitalization of the name matters 
 ```
 
 
@@ -228,7 +244,15 @@ KNIT & COMMIT & PUSH: "Add part 3 answers"
 
 
 ```{r brewer-schemes, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_point(aes(shape = country, color = country)) +
+  geom_smooth(aes(lty = country), method = "loess", se = FALSE) + scale_color_brewer() + scale_color_brewer(type = "qual", palette = 2)
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "country", lty = "country") #capitalization of the name matters
 ```
 
 <!--
