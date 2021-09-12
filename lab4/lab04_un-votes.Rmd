@@ -262,14 +262,30 @@ KNIT & COMMIT & PUSH: "Add part 4 color brewer answers"
 ## <!-- 4.4 -->**Manual**: Replace the `scale_color_brewer()` line with `scale_color_manual(values = c("green", "purple", "blue"))`.  Notice there are three colors I'm specifying, one for each of the three countries. 
 
 ```{r manual-colors, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_point(aes(shape = country, color = country)) +
+  geom_smooth(aes(lty = country), method = "loess", se = FALSE) + scale_color_brewer() + scale_color_manual(values = c("green", "purple", "blue"))
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "Country", lty = "Country") #capitalization of the name matters
 ```
 
 
 ## <!-- 4.4 -->Don't like those colors?  You can be more exact by specifying hex color codes. Try replacing "green", "purple" and "blue" with "#05a05a", "#844185", "#024a81", respectively. 
 
 ```{r manual-hex, fig.width = 6.5, fig.height = 3}
-
+ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes, 
+                                        color = country)) +
+  geom_point(aes(shape = country, color = country)) +
+  geom_smooth(aes(lty = country), method = "loess", se = FALSE) + scale_color_brewer() + scale_color_manual(values = c("#05a05a", "#844185", "#024a81"))
+  labs(title = "Percentage of 'Yes' votes  on human rights issues",
+       subtitle = "UN General Assembly, 1946 to 2019",
+       y = "% Yes",
+       x = "Year",
+       color = "Country", lty = "Country") #capitalization of the name matters
 ```
 
 
