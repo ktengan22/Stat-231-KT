@@ -252,7 +252,7 @@ ggplot(data = unvotes_hr, mapping = aes(x = year, y = percent_yes,
        subtitle = "UN General Assembly, 1946 to 2019",
        y = "% Yes",
        x = "Year",
-       color = "country", lty = "country") #capitalization of the name matters
+       color = "Country", lty = "Country") #capitalization of the name matters
 ```
 
 <!--
