@@ -83,6 +83,7 @@ library(mdsr)
 library(kableExtra)
 library(nycflights13)
 library(tibble)
+library(babynames)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -140,7 +141,7 @@ Getting NAs for `avg_arr_delay`?
 You can drop all the cases that contain missing observations with the **tidyr** function `drop_na()` before grouping.
 -->
 ```{r}
-delay_summary <- flights_short %>% 
+delay_summary <- tibble(flights_short %>% 
   drop_na() %>% 
   group_by(name) %>% 
   summarize(
@@ -148,7 +149,7 @@ delay_summary <- flights_short %>%
     avg_arr_delay = mean(arr_delay),
     avg_dist_km = mean(distance_km)
   ) %>% 
-  arrange(desc(avg_arr_delay))
+  arrange(desc(avg_arr_delay)))
 
 delay_summary
 
@@ -184,7 +185,8 @@ delay_summary
 ## <!-- 2.1 -->Working with the `babynames` data in the **babynames** package, create a dataset `recent_names` that only includes years 2000 to 2017.
 
 ```{r}
-
+recent_names <- babynames %>% 
+  filter(year %in% 2000:2017)
 ```
 
 
@@ -196,7 +198,9 @@ Hint: follow either code chunk at the start of Section 6.2.5, but don't filter o
 Take a look at the summarized dataset using `head()` or `View()` in the Console to verify your code works as expected.
 --> 
 ```{r}
-
+recentnames_summary <- recent_names %>% 
+  group_by(name, sex) %>% 
+  summarize(total = sum(n))
 ```
 
 
@@ -206,11 +210,26 @@ Take a look at the summarized dataset using `head()` or `View()` in the Console 
 Note: these names will likely be different from the ones found in the text since we limited the dataset to years 2000-2017 and names with greater than 10,000 individuals.)
 -->
 ```{r}
+recentnames_balanced_wide <- recentnames_summary %>% 
+  pivot_wider(
+    names_from = sex,
+    values_from = total,
+    values_fill = 0
+  )
 
+#head(recentnames_balanced_wide, 3)
+
+recentnames_balanced_wide %>% 
+  filter(M > 10000, F > 10000) %>% 
+  mutate(ratio = pmin(M / F, F/ M)) %>% 
+  arrange(desc(ratio)) %>% 
+  head(3)
 ```
 
 
 ## <!-- 2.4 -->Finally, use `pivot_longer()` to put the dataset back into *long* form. Call this dataset `recentnames_balanced` and display the table. Why are the number of observations in `recentnames_balanced_wide` different from that in `recentnames_summary` from Problem 2.2?
+
+> I noticed that we had filtered out and only taken the names with greater than 10,000 individuals for males and females. That is why there are ~67,000 observations for recentnames_balanced_wide versus >73,000 observations for recentnames_summary. 
 
 <!--
 Hint: see Section 6.2.3. 
@@ -219,7 +238,8 @@ Hint: see Section 6.2.3.
 
 
 ```{r}
-
+recentnames_balanced <- recentnames_balanced_wide %>% 
+  pivot_longer(-name, names_to = "sex", values_to = "total")
 ```
 
 
