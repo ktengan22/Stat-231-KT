@@ -171,7 +171,7 @@ delay_summary <- delay_summary %>%
         "Average arrival delays (mins)" = avg_arr_delay,
         "Average distance (km)" = avg_dist_km
         ) %>% 
-kable(booktabs = TRUE, digits = c(0, 0, 0, 1))
+kable(booktabs = TRUE, digits = 1)
 
 delay_summary
 
