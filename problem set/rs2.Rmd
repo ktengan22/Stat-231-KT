@@ -82,6 +82,7 @@ library(tidyverse)
 library(mdsr)
 library(kableExtra)
 library(nycflights13)
+library(tibble)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -123,9 +124,9 @@ flights_short <- flights_joined %>%
   mutate(distance_km = distance*(1.6)) %>% 
   select(name, flight, arr_delay, distance_km)
 
-filter(flights_short, distance_km <= 500)
+flights_short <- filter(flights_short, distance_km <= 500)
 
-
+glimpse(flights_short)
 
 ```
 
@@ -139,7 +140,19 @@ Getting NAs for `avg_arr_delay`?
 You can drop all the cases that contain missing observations with the **tidyr** function `drop_na()` before grouping.
 -->
 ```{r}
+delay_summary <- flights_short %>% 
+  drop_na() %>% 
+  group_by(name) %>% 
+  summarize(
+    N = n(),
+    avg_arr_delay = mean(arr_delay),
+    avg_dist_km = mean(distance_km)
+  ) %>% 
+  arrange(desc(avg_arr_delay))
 
+delay_summary
+
+#Figure out the tibble object and call it delay_summary & display table
 ```
 
 
@@ -152,6 +165,15 @@ kable(booktabs = TRUE, digits = c(0, 0, 0, 1))
 -->
 
 ```{r}
+delay_summary <- delay_summary %>% 
+  rename("Airline" = name,
+       "Total flights under 500 km" = N,
+        "Average arrival delays (mins)" = avg_arr_delay,
+        "Average distance (km)" = avg_dist_km
+        ) %>% 
+kable(booktabs = TRUE, digits = c(0, 0, 0, 1))
+
+delay_summary
 
 ```
 
