@@ -240,13 +240,14 @@ Hint: see Section 6.2.3.
 ```{r}
 recentnames_balanced <- recentnames_balanced_wide %>% 
   pivot_longer(-name, names_to = "sex", values_to = "total")
+recentnames_balanced
 ```
 
 
 <!-- PROBLEM 3 ---------------------------------------------------------------->
 # <!-- 3 -->**Ethical conundrums** Each subsection of Section 8.4 discusses an ethical scenario and ends with one or more questions. Choose one of the scenarios provided to reflect on, and *in one paragraph or less* respond to the question(s) posed with your initial thoughts. Please identify the scenario for reference (e.g. "8.4.1 The chief executive officer").
 
-
+> Responding to 8.4.1. This reminds me of a story Shu-Min told us as she worked for her college as a data scientist. I had a similar experience working for an environmental engineering consulting firm this summer and being tasked with analyzing 10 years worth of water sampling and create graphs for the Massachusetts Department of Public Health. The consultant should obviously respond, "no this is unethical and has lots of potential to harm many people in the future if we choose to disseminate misinformation to the public just for profit." The reality however is that data consultant may get fired and lose their entirely livelihood for standing up for what is right. The way modern western science works today is that research is funded by grants. Millions of dollars flooding to fund long-term experiments or studies. The reality is that you produce results or lose your job. It is a tough situation and that is why people must be ethical. 
 
 <!--
 Congrats! You've made it to the end. If you think you are done, read the instructions for how to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
