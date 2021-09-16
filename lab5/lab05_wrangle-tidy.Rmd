@@ -154,12 +154,17 @@ coverage <- coverage %>%
 ```{r}
 coverage <- coverage %>% 
   select(Location, starts_with(c("2013", "2014")))
+
+spending <- spending %>% 
+  select(Location, starts_with(c("2013", "2014")))
 ```
 
 ## <!-- 1.7 -->There are 50 states in the United States but 52 observations in the `coverage` and `spending` datasets. The two "bonus" cases contain information about the US as a whole and Washington DC.  Remove these observations from both datasets.
 
 ```{r}
-coverage_50 <- coverage[-c(1, 10),]
+coverage <- coverage[-c(1, 10),]
+
+spending <- spending[-c(1, 10),]
 ```
 
 <!--
@@ -175,11 +180,39 @@ Have you been committing and pushing? Now's a good time! "Add answers to Part 1"
 
 ## <!-- 2.2 -->What are some of the steps that will need to be taken to get the data in that form?  
 
-
+- call in the data set
+- mutate and log transform `spending` and `employer covereage` 
+- lable the axes and define the color of the years
+- find the R to see if there's a relationship or look at the graph and fit a line maybe 
 
 ## <!-- 2.3 -->Now implement those steps in R, tidying the dataset for plotting.  After the final step, use the `clean_names()` function from the **janitor** package to clean the variable names.  Then, create the scatterplot!
 
 ```{r}
+joined <- coverage %>% 
+  inner_join(spending, by = c("Location" = "Location"))
+
+# joined %>% 
+#   group_by(Location) %>% 
+#   summarize(
+#   )
+
+joined_long <- joined %>% 
+  pivot_longer(-Location, #pivot everything else but location
+              names_to = c("Year", "Category"),
+              names_sep = "__", #separate the data into two columns "year" and "category" that is separated by "__"
+              values_to = "Amount")
+
+# joined_long
+
+joined_wider <- joined_long %>% 
+  pivot_wider(
+    names_from = Category,
+    values_from = Amount,
+    #values_fill = 0
+  ) %>% 
+  clean_names()
+
+joined_wider
 
 ```
 
