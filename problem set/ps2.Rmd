@@ -1,6 +1,6 @@
 ---
 title: "Practice Set 2"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "Due by 10pm ET on Friday"
 urlcolor: blue
 linkcolor: blue
@@ -85,19 +85,23 @@ If you worked with others or used resources outside of provided course material 
 
 Name(s) and corresponding problem(s)
 
-*
+*Mahathi & Caroline Tilton problem 1.1, 1.2
+*SDS fellows (Maggie), 1.3, 2.1
+*Rohil 2.2
 
 *I used the following sources to help complete this assignment:*
 
 Source(s) and corresponding problem(s)
 
-* 
+* textbook chapter 4 and 5 for 1.1, 1.2
 
 ```{r setup, include = FALSE}
 # load packages
 library(mdsr)
 library(tidyverse)
 library(kableExtra)
+library(Lahman)
+library(dplyr)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -119,21 +123,52 @@ options(scipen = 1, knitr.kable.NA = '')
 ## <!-- 1.1 -->List the name of every player in baseball history who has accumulated at least 300 home runs (HR) and at least 300 stolen bases (SB). You can find the first and last name of the player in the `Master` data frame. Join this to your result along with the total home runs and total bases stolen for each of these elite players.
 
 ```{r}
+ batting2 <- Batting %>% 
+  group_by(playerID) %>% 
+  summarize(HR = sum(HR), SB = sum(SB)) %>% 
+  left_join(y = Master, by = "playerID") %>% 
+  filter(HR >= 300 & SB >= 300) %>% 
+  select(nameFirst, nameLast, playerID, HR, SB)
+
+batting2
+
+
+# Master
 
 ```
 
 ## <!-- 1.2 -->Similarly, list the names every pitcher in baseball history who has accumulated at least 300 wins (W) and at least 3,000 strikeouts (SO).
 
 ```{r}
+# create a new dataset
+ pitching2 <- Pitching %>% 
+  group_by(playerID) %>% 
+  summarize(W = sum(W), SO = sum(SO)) %>% #summarize W and SO
+  left_join(y = Master, by = "playerID") %>% #left join
+  filter(W >= 300 & SO >= 300) %>% 
+  select(nameFirst, nameLast, playerID, W, SO)
 
+pitching2
 ```
 
 ## <!-- 1.3 -->Finally, list the name and year of every player who has hit at least 50 home runs in a single season. Which player had the lowest batting average in that season? Note: Batting average is calculated as the number of hits (H) divided by the number of at bats (AB).
 
+Pete Alonso had the lowest batting average in year 2019.
 
 
 
 ```{r}
+batting3 <- Batting %>%
+  group_by(playerID) %>%
+  filter(HR >= 50) %>% #HR >= 50 filter
+  mutate(BA = H/AB) %>% #create a new variable BA
+  inner_join(Master, by = "playerID") %>%
+  select(nameFirst, nameLast, yearID, HR, BA, playerID) %>% 
+  arrange(BA)
+
+batting3
+
+
 
 ```
 
@@ -141,17 +176,35 @@ options(scipen = 1, knitr.kable.NA = '')
 <!-- PROBLEM 2 ---------------------------------------------------------------->
 # <!-- 2 -->**MDSR 4.11 (modified)** The `Violations` data set in the **mdsr** package contains information regarding the outcome of health inspections of restaurants in New York City. Note that higher inspection scores indicate worse violations: "restaurants with an inspection score between 0 and 13 points earn an A, those with 14 to 27 points receive a B and those with 28 or more a C" ([nyc.gov](https://www1.nyc.gov/assets/doh/downloads/pdf/rii/how-we-score-grade.pdf)).
 
-## <!-- 2.1 -->Use these data to calculate the median violation score by zip code for zip codes in Manhattan. What pattern, if any, do you see between the number of inspections and the median score? Generate a visualization to support your response.  
-  
+## <!-- 2.1 -->Use these data to calculate the median violation score by zip code for zip codes in Manhattan. What pattern, if any, do you see between the number of inspections and the median score? Generate a visualization to support your response.
 
 
 
 ```{r}
+viomedians <- Violations %>% 
+  filter(boro == "MANHATTAN") %>% 
+  drop_na(score) %>% 
+  group_by(zipcode) %>% 
+  summarize(median = median(score),
+            N = n())
 
+m <- ggplot(data = viomedians, aes(x = N, y = median)) +
+  geom_point() + 
+  labs(title = "Median Violation Score by Zipcode",
+       median = "Median",
+       N = "Number of Inspections") +
+  geom_smooth(method = "loess", se = FALSE)
+  
+
+m
 ```
+
 
 ## <!-- 2.2 -->In your visualization above, there are several potential outliers but there is one zipcode in particular that does not seem to fall along the general trend. Add text to the outlier identifying what zipcode it is, and add an arrow pointing from the text to the observation. Note: first, you may want to `filter()` to identify the zipcode (so you know what text to add to the plot).  
 
+The asymptote is approximately 18. There is one clear outlier around 25. As the number increases, the distribution becomes tighter and it looks like there are less outliers. 
+
+ 
 <!--
 (Can't remember how to create a curved arrow in `ggplot()`?  
 
@@ -163,9 +216,15 @@ Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.o
 -->
 
 ```{r}
-
+viomedians %>%  #check for the outlier
+  filter(median > 20)
 ```
 
+```{r}
+m2 <- subset(viomedians, zipcode == 10123) #create new dataset with outlier
+m + geom_point(data = m2) + 
+  ggrepel::geom_text_repel(data = m2, label = "10123", vjust = 2)
+```
 
 
 <!-- PROBLEM 3 ---------------------------------------------------------------->
@@ -176,7 +235,25 @@ Check out the text examples with `annotate()` [here](https://ggplot2.tidyverse.o
 ![Results](img/ps2_mdsr-5-5-result.png){width=80%}
 
 ```{r}
+datatable <- data.frame(
+  grp = c("A", "A", "B", "B"),
+  sex = c("F", "M", "F", "M"),
+  meanL = c(0.225, 0.470, 0.325, 0.547),
+  sdL = c(0.106, 0.325, 0.106, 0.308),
+  meanR = c(0.340, 0.570, 0.400, 0.647),
+  sdR = c(0.085, 0.325, 0.071, 0.274)
+)
 
+data_long <- datatable %>% 
+  pivot_longer(-c("grp", "sex"), names_to = "group", values_to = "value")
+
+data_wide <- data_long %>% 
+  pivot_wider(names_from = c("sex", "group"), 
+              values_from = value,
+              values_fill = 0) %>% 
+  kable()
+
+data_wide
 ```
 
 
