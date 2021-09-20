@@ -1,6 +1,6 @@
 ---
 title: "Reading Set 3b: Shiny Tutorial Video"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "Due by 10pm ET on Monday"
 urlcolor: blue
 linkcolor: blue
@@ -165,7 +165,8 @@ Whenever the user changes the value on a slide, it tells the render function
 that this value is out of date. The render function then reacts and updates 
 to the new value, and displays that updated graphical output. This happens
 instantaneous to the user, so as the user changes the values on the slide, 
-the graph also changes and updates. 
+the graph also changes and updates. The reactive output will automatically
+update to the changed input value. 
 
 ## <!-- 2.2 -->Give an example of how you might use one (or more) reactive value(s) in conjunction with a reactive function.
 
