@@ -201,6 +201,11 @@ When it comes time in the tutorial, open the file as indicated to view the conte
 
 ## <!-- 3.1 -->What is one question that still remains after completing the webinar (and after trying to answer yourself with your answer-finding skills)? 
 
+I am having extreme difficulty with isolating the reactive title change.
+With what I have now, whenever I change the title for the histogram,
+both the histogram plot and the title react. Even without moving the slider,
+when I change the name, the values and plot also change. When I tried to isolate
+the title, the title no longer reacted and changed. How can I isolate the title?
 
 
 <!-- PART 4 ---------------------------------------------------------------->
