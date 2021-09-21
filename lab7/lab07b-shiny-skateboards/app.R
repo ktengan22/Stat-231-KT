@@ -47,7 +47,9 @@ cmpy_choices <- unique(skateboards$company)
 ############
 ui <- navbarPage(
   title = "Electric Skateboards",
+  theme = shinytheme("superhero"),
   
+
   # Tab 1: Histogram
   tabPanel(
     title = "Histogram",
@@ -59,12 +61,17 @@ ui <- navbarPage(
                     label = "Choose a variable of interest to plot:",
                     choices = hist_choice_values,
                     selected = "price"),
+      
         
         checkboxGroupInput(inputId = "drv",
                            label = "Include drive types:",
                            choices = drv_choices,
                            selected = drv_choices,
-                           inline = TRUE)
+                           inline = TRUE),
+        
+        textInput(inputId = "title", 
+                  label = "Write a title",
+                  value = "Histogram")
       ),
       
       mainPanel(plotOutput(outputId = "hist"))
@@ -148,7 +155,8 @@ server <- function(input, output){
   output$hist <- renderPlot({
     ggplot(data = data_for_hist(), aes_string(x = input$histvar)) +
       geom_histogram(color = "#2c7fb8", fill = "#7fcdbb", alpha = 0.7) +
-      labs(x = hist_choice_names[hist_choice_values == input$histvar],
+      labs( title = input$title, 
+           x = hist_choice_names[hist_choice_values == input$histvar],
            y = "Number of Skateboards")
   })
   

@@ -43,13 +43,13 @@ ui <- fluidPage(
       selectInput(inputId = "nm",
                   label = "Name:",
                   choices = name_choices,
-                  selected = "Brittney"),
+                  selected = "Kauila"),
       
       # Choose Sex
       radioButtons(inputId = "sx",
                    label = "Sex:",
                    choices = c("M", "F"),
-                   selected = "F")
+                   selected = "M")
     ),
     
     # Show change in name use over time
@@ -72,7 +72,7 @@ server <- function(input, output) {
       lims(x = c(1880, 2020)) +
       labs(x = "Year", 
            y = "Total number of births with this name",
-           title = paste("Babies Named", input$nm)) + 
+           title = paste("Number of Babies Named", input$nm)) + 
       theme_bw()
   })
 }
