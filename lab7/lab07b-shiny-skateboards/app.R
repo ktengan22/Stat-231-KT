@@ -4,6 +4,7 @@ library(shinythemes)
 library(tidyverse)
 library(DT)
 library(ggrepel)
+library(shinyWidgets)
 #library(fivethirtyeight)
 
 # Import data
@@ -62,12 +63,23 @@ ui <- navbarPage(
                     choices = hist_choice_values,
                     selected = "price"),
       
-        
+        sliderInput(inputId = "binsize",
+                    label = "Slide to Change the Histogram Binwidth",
+                    min = 20,
+                    max = 100,
+                    value = 30),
+          
         checkboxGroupInput(inputId = "drv",
                            label = "Include drive types:",
                            choices = drv_choices,
                            selected = drv_choices,
                            inline = TRUE),
+
+        # prettyCheckbox(
+        #   inputId = "drv", label = "Include drive types:", icon = icon("thumbs-up"),
+        #   status = "default", shape = "curve", animation = "pulse",
+        #   choices = drv_choices, selected = drv_choices, inline = TRUE
+        # ),
         
         textInput(inputId = "title", 
                   label = "Write a title",
@@ -154,7 +166,7 @@ server <- function(input, output){
   
   output$hist <- renderPlot({
     ggplot(data = data_for_hist(), aes_string(x = input$histvar)) +
-      geom_histogram(color = "#2c7fb8", fill = "#7fcdbb", alpha = 0.7) +
+      geom_histogram(color = "#2c7fb8", fill = "#7fcdbb", alpha = 0.7, binwidth = input$binsize) +
       labs( title = input$title, 
            x = hist_choice_names[hist_choice_values == input$histvar],
            y = "Number of Skateboards")
