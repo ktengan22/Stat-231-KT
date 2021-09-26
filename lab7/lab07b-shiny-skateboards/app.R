@@ -62,12 +62,13 @@ ui <- navbarPage(
                     label = "Choose a variable of interest to plot:",
                     choices = hist_choice_values,
                     selected = "price"),
-      
-        sliderInput(inputId = "binsize",
+        
+      #add a slider input to change the size of the bins for the hist
+        sliderInput(inputId = "binsize", #name to call later
                     label = "Slide to Change the Histogram Binwidth",
-                    min = 20,
+                    min = 20, 
                     max = 100,
-                    value = 30),
+                    value = 30), #display value upon opening
           
         checkboxGroupInput(inputId = "drv",
                            label = "Include drive types:",
