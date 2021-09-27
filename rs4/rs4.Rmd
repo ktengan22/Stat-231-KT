@@ -1,6 +1,6 @@
 ---
 title: "Reading Set 4"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "Due by 10pm ET on Monday"
 urlcolor: blue
 linkcolor: blue
@@ -80,6 +80,9 @@ You can resubmit your work as many times as you want before the deadline, so you
 # load packages
 library(tidyverse)
 library(kableExtra)
+library(rvest)
+library(robotstxt)
+library(kableExtra)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -100,6 +103,7 @@ options(scipen = 1, knitr.kable.NA = '')
 
 ## <!-- 1.1 -->Check the permissions for the Wikipedia page using the code below. If the code returns "TRUE", then that indicates a bot has permission to access the page. Do you (via R) have permission to access the page? 
 
+Yes, after using the `paths_allowed()` function in the **robotstxt** package, the bot returned "TRUE."
 
 
 ```{r}
@@ -115,16 +119,25 @@ paths_allowed(url)
 Remember to load any necessary packages in the `setup` code chunk, installing them first if necessary.
 -->
 
+There are 12 tables in the object `tables` we created.
 
 
 ```{r}
+tables <- url %>% 
+  read_html() %>% 
+  html_nodes("table")
 
+length(tables)
 ```
 
 ## <!-- 1.3 -->Next, look at the [Wikipedia page](https://en.wikipedia.org/wiki/Mile_run_world_record_progression).  We want to work with the table toward the bottom titled "Women Indoor IAAF era" shows four records: one for Mary Decker, two for Doina Melinte, and one for Genzebe Dibaba.  From your `tables` object created in 1.2, create a dataframe called `women_indoor` that includes this "Women Indoor IAAF era" table data.  *Hint*: You can use the same code as used in the textbook to create the `amateur` and `records` tables, except you'll need to update the table number that's `pluck`ed.
 
 ```{r}
+women_indoor <- tables %>% 
+  purrr::pluck(10) %>% #retrieves this specific data table from the wiki page
+  html_table() #formats into the html wikipedia table form?
 
+women_indoor
 ```
 
 ## <!-- 1.4 -->Use `kable()` to display the table from 1.3. Who holds the indoor one-mile world record for IAAF women, and what was her time?
@@ -133,9 +146,11 @@ Remember the argument `booktabs = TRUE` is a quick way to make the table look ni
 -->
 
 
+According to our data table, the indoor women's one-mile world record is held by Genzebe Dibaba with a time of 4:13.31. 
 
-```{r}
-
+```{r, booktabs = TRUE}
+women_indoor %>% 
+  kable(booktabs = TRUE)
 ```
 
 ## <!-- 1.5 -->Create a dataframe called `women_outdoor` that contains the table for "Women's IAAF era" (starting with Anne Smith's record and ending with Sifan Hassan's record). Combine `women_indoor` and `women_outdoor` into one dataframe called `women_records` using the `bind_rows()` function.  Include a variable called `Type` in this new dataframe to indicate whether a particular observation corresponds to an indoor record or an outdoor record (*hint*: create `Type` separately in each dataframe before combining). Finally, arrange `women_records` by ascending time, drop the `Venue` variable, and display the table using `kable()`. Who holds the fastest record, and was it from an indoor or outdoor event?
@@ -143,15 +158,33 @@ Remember the argument `booktabs = TRUE` is a quick way to make the table look ni
 -->
 
 
+Sifan Hassan, with a time of 4:12.33
 
-```{r}
+```{r, longtable = TRUE}
+
+women_indoor2 <- women_indoor %>% 
+  select(-Venue) %>%  #remove Venue variable
+  mutate(Type = "Indoors") #Assign indoor info for variable "Type"
+
+women_outdoor <- tables %>% 
+  purrr::pluck(8) %>% #retrieves this specific data table from the wiki page
+  html_table() %>% #formats into the html wikipedia table form?
+  select(-Auto, -Venue) %>% #remove Venue variable
+  mutate(Type = "Outdoors") #add variable "Type" for outdoors
+
+women_records <- bind_rows(women_indoor2, women_outdoor) %>% #combine tables
+  arrange(Time) %>% # arrange time in ascending order
+  kable(lontable = TRUE) #make it aesthetically more pleasing
+
+
+women_records
 
 ```
 
 <!-- PROBLEM 2 ---------------------------------------------------------------->
 # <!-- 2 -->As we wrap up the chapter on ethics, what are three major takeaways from Chapter 8 that had an impact on how you think about approaching your work as a budding data scientist?
 
-
+The big thing that stuck out to me was the section about reproducibility. This summer I was tasked with updating 10 years worth of data in an excel spreadsheet for a journal. I had to update and recreate each of the figures, graphs, and tables. The last set of authors kept no trace of their work so I essentially had to do everything on my own with no experience in excel. With that said, I had difficulty conceptualizing how the next editors would be able to reproduce my work. This is a valuable lesson. Another major takeaway was spending a lot of time considering the ethical repercussions of my data and its analyses. On one hand the accuracy of it. Instead of producing something to fulfill a grant requirement that necessitates extensive wrangling to the point where it is no longer reproducible, that is unethical. Thirdly, even if the data comes out perfectly and statistically accurate, that does not necessarily correlate with being ethical. If my data, without much wrangling details a clear message that could disenfranchise groups, amplifying inequality, or impede on someone's privacy (like the Harvard study example), that is again not ethical.  
 
 <!--
 Congrats! You've made it to the end. If you think you are done, read the instructions for how to do the final commit + push, this time including your renamed pdf, and upload to Gradescope.
