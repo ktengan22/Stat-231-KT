@@ -160,8 +160,7 @@ women_indoor %>%
 
 Sifan Hassan, with a time of 4:12.33
 
-```{r, longtable = TRUE}
-
+```{r}
 women_indoor2 <- women_indoor %>% 
   select(-Venue) %>%  #remove Venue variable
   mutate(Type = "Indoors") #Assign indoor info for variable "Type"
@@ -173,11 +172,10 @@ women_outdoor <- tables %>%
   mutate(Type = "Outdoors") #add variable "Type" for outdoors
 
 women_records <- bind_rows(women_indoor2, women_outdoor) %>% #combine tables
-  arrange(Time) %>% # arrange time in ascending order
-  kable(lontable = TRUE) #make it aesthetically more pleasing
-
-
-women_records
+  arrange(Time) # arrange time in ascending order
+  
+women_records %>% 
+  kable(longtable = TRUE) #make it aesthetically more pleasing
 
 ```
 
