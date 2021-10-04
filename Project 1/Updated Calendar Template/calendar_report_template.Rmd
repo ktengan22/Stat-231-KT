@@ -47,7 +47,7 @@ https://support.google.com/calendar/answer/37111?hl=en&ref_topic=10509946
 -->
 ```{r, eval = FALSE}
 # Data import and preliminary wrangling
-calendar_data <- "ktdata.ics" %>% 
+calendar_data <- "ktdata3.ics" %>% 
   # Use ical package to import into R
   ical_parse_df() %>% 
   # Convert to "tibble" data frame format
@@ -60,11 +60,29 @@ calendar_data <- "ktdata.ics" %>%
     # duration_min = end_datetime - start_datetime,
     date = floor_date(start_datetime, unit = "day"),
     # Convert calendar entry to all lowercase and rename
-    activity = tolower(summary))
+    activity = tolower(summary),
+    overall = fct_collapse(factor(summary), #new overall variables for work/class
+                           class = c("ASLC_class", "ASLC_study",
+                                     "ENST_class", "ENST_OH", "ENST_study", 
+                                     "NS_class", "NS_study", "STAT_class",
+                                     "STAT_OH", "STAT_SDS", "STAT_study"),
+                           work = c("work_divtern", "work_meeting", "work_NISA")
+                           ),
+    time = as.numeric(duration_min)) #making duration into a numeric
+  
+  #data wrangling for visualization 1
+  class_data <- calendar_data %>% 
+     #filter our overall variable by class only
+    filter(overall == "class") %>% 
+    #separating class and activity
+    separate(summary, c("class", "activity"), "_", remove = FALSE) %>% 
+    group_by(class, activity) %>% 
+    summarize(overall_time = sum(time))
+   
 
 # Compute total duration of time for each day & activity
 activities <- calendar_data %>% 
-  group_by(date, activity) %>%
+  group_by(date, overall) %>%
   summarize(duration_min = sum(duration_min))
 
 
@@ -87,6 +105,13 @@ Describe what information is conveyed through data visualization #1 (that you'll
 ```{r}
 # Code for data visualization #1
 # Be sure to provide meaningful title and axes labels 
+
+ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
+  geom_bar(position = "stack", stat = "identity") +
+  labs(title = "Time Devoted to Each Class",
+       x = "Classes",
+       y = "Total Time (min)") #+
+  # scale_fill_brewer(palette = )
 ```
 
 <!--
@@ -98,6 +123,21 @@ Describe what information is conveyed through data visualization #2 (that you'll
 ```{r}
 # Code for data visualization #2
 # Be sure to provide meaningful title and axes labels 
+ggplot(calendar_data, aes(x = date, y = time,
+                          color = overall)) + 
+  geom_line() +
+  labs(title = "Time Series Graph Over 2 Weeks",
+       subtitle = "Amount of Time Devote to Each Task Each Day",
+       y = "Total Time (Minutes)",
+       x = "Date (YYYY-MM-DD)",
+       color = "Overall", lty = "Overall") +
+  #Change date breaks 
+  scale_x_datetime(date_breaks = "1 days") +
+  #increase y labels (add 10 breaks)
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(1)))
+         
+       
 ```
 
 <!--
