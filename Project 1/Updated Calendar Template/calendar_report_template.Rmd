@@ -159,6 +159,18 @@ or
 
 ```{r, results = 'asis'}
 # Code for table
+table <- calendar_data %>% 
+  group_by(overall) %>% 
+  rename(Category = overall) %>% 
+  summarize(
+    N = n(),
+    Average = mean(time),
+    # class_avg = mean(class)
+  ) %>% 
+  arrange(desc(Average)) %>% 
+  kable(booktabs = TRUE, digits = 0)
+
+table
 ```
 
 <!--
