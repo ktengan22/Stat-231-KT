@@ -1,6 +1,6 @@
 ---
 title: "Reading Set 5"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "Due by 10pm ET on Monday"
 urlcolor: blue
 linkcolor: blue
@@ -80,6 +80,9 @@ You can resubmit your work as many times as you want before the deadline, so you
 # load packages
 library(tidyverse)
 library(kableExtra)
+library(robotstxt)
+library(mdsr)
+library(gutenbergr)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -100,13 +103,18 @@ options(scipen = 1, knitr.kable.NA = '')
 
 ## <!-- 1.1 -->The first url in section 19.1.1 is copied below. Are robots allowed to scrape that page?
 
+No, they are currently not allowed, the function returns "FALSE."
+
 ```{r}
 macbeth_url <- "http://www.gutenberg.org/cache/epub/1129/pg1129.txt"
+
+#Check
+paths_allowed(macbeth_url)
 ```
 
 ## <!-- 1.2 -->Read this page on web scraping from the [Gender Novels Project](http://gendernovels.digitalhumanitiesmit.org/info/web_scraping) (some links are broken). Then read Project Gutenberg's [policy about robot access](https://www.gutenberg.org/policy/robot_access.html) to their pages. Reflect on the situation we are in. What do you  think are the appropriate steps to proceed if you are interested in scraping texts from Project Gutenberg? Is it okay to ignore the "robots.txt" file in this situation?
 
-
+One reason websites don't allow scraping is that it can drain a host server. Another reason would be impinging on fair-use conditions. The situation we are in is bad because it goes against ethical statistics, we may be plagiarizing someone's work or doing actions that affect the server's wellbeing. It is not okay to ignore this FALSE response. We should either check with the website's fair use policy or contact the house. The other option is to refer to a mirror website that was made for the intention of being scraped. 
 
 ## <!-- 1.3 -->The [**gutenburgr**](https://cran.r-project.org/web/packages/gutenbergr/vignettes/intro.html) package allows us to be more responsible in our datascraping by incorporating the site's recommendations for scraping (that is, the site allows us to download texts from a mirror site rather than scraping gutenberg.org directly). I have provided the code below to demonstrate how we can use this package to get a text-analysis-friendly version of the text. Run the code below just to explore how this package works. 
 
@@ -120,8 +128,17 @@ Macbeth <- gutenberg_download(1533)
 
 ## <!-- 1.4 -->While the **gutenbergr** package is a great package, we want to be able to follow along with the code in the text for this chapter! Thankfully, the **mdsr** package already contains the Macbeth dataset. Run the code below to make the dataset appear in your environment pain. The next code chunk in the text introduces `str_split()`. Follow along with that block of code in the chunk below. Verify that  `Macbeth_raw` is a vector of length 1. What is the length of `macbeth` after using `str_split()`? Why are the lengths different?
 
+Before we split the string, macbeth was a single vector, the entire play. But now we split each line with the identifier for the end of each line `\r\n`. That is why the length is now over 3,000. 
+
+
 ```{r}
 data(Macbeth_raw)
+
+#code from ch. 19 textbook
+macbeth <- Macbeth_raw %>% 
+  str_split("\r\n") %>% 
+  pluck(1)
+length(macbeth)
 
 ```
 
@@ -133,7 +150,11 @@ data(Macbeth_raw)
 Yes, the textbook explains the differences, but it can be helpful if you run the lines yourself, as well, to be sure they work as you'd expect and to inspect the results.
 -->
 
+`str_subset()` works like a needle in a haystack to find a specific character pattern in a vector.
 
+`str_which()` return the number of instances those characters are in a vector. Thus it shows 6 different mentions of MACBETH with the two spaces beforehand (the format of the script).
+
+`str_detect()` returns "a logical vector as long as the haystack" (19.1).
 
 ```{r}
 str_subset(macbeth, "  MACBETH") %>% head()
@@ -145,7 +166,7 @@ str_detect(macbeth, "  MACBETH") %>% head()
 
 ## <!-- 2.2 -->Why do the two lines below differ in their results?
 
-
+`.` serves as a metacharacter for a regular expression. So this function will look for all characteristics that include "MACBETH". However, we need to include `\\` to break the function as to only return the MACBETH lines we are looking for, not just every time the name is mentioned.
 
 ```{r}
 str_subset(macbeth, "MACBETH\\.") %>% head()
@@ -155,7 +176,7 @@ str_subset(macbeth, "MACBETH.") %>% head()
 
 ## <!-- 2.3 -->The three commands below look similar, but return different results. In words, explain what overall pattern is being searched for in each of the three cases (i.e., what do the patterns `MAC[B-Z]`, `MAC[B|Z]`, and `^MAC[B-Z]` indicate?)?
 
-
+These are character sets. B-Z will match all characters that contain `MAC` followed by all letters excluding A ex. MACALESTER (19.1). `|` will simply return character strings specifically containing B or D after MAC. Finally `^` anchors the character to the beginning of the text, whereas `$` would anchor it to the end. 
 
 ```{r}
 str_subset(macbeth, "MAC[B-Z]") %>% head()
@@ -170,13 +191,17 @@ str_subset(macbeth, "^MAC[B-Z]") %>% head()
 
 
 ```{r}
+#* indicates zero or more times
 str_subset(macbeth, ".*MAC[B-Z]") %>% head()
 
+#
 str_subset(macbeth, ".MAC[B-Z]") %>% head()
 
+#makes sure "more" is at the end
 str_subset(macbeth, "more$") %>% head()
 
 # Code below should return character(0) (i.e., nothing)
+#Why can't you anchor an or subset at the front?
 str_subset(macbeth, "^MAC[B|Z]") %>% head()  
 ```
 
