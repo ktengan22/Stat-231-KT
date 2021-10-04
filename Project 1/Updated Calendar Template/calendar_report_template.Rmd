@@ -11,6 +11,7 @@ output: pdf_document
 library(tidyverse)
 library(lubridate)
 library(ical)
+library(kableExtra)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -45,7 +46,7 @@ If you are using the code, be sure to update the capitalized parts with the rele
 As a reminder here's the link for exporting a Google calendar to ics (if on a Mac, you can hold cmd + click to open the page):
 https://support.google.com/calendar/answer/37111?hl=en&ref_topic=10509946
 -->
-```{r, eval = FALSE}
+```{r, warning = FALSE}
 # Data import and preliminary wrangling
 calendar_data <- "ktdata3.ics" %>% 
   # Use ical package to import into R
@@ -57,6 +58,7 @@ calendar_data <- "ktdata3.ics" %>%
     start_datetime = with_tz(start, tzone = "America/New_York"),
     end_datetime = with_tz(end, tzone = "America/New_York"),
     duration_min = difftime(end_datetime, start_datetime, units = "mins"),
+    duration_hours = duration_min/60,
     # duration_min = end_datetime - start_datetime,
     date = floor_date(start_datetime, unit = "day"),
     # Convert calendar entry to all lowercase and rename
@@ -68,8 +70,13 @@ calendar_data <- "ktdata3.ics" %>%
                                      "STAT_OH", "STAT_SDS", "STAT_study"),
                            work = c("work_divtern", "work_meeting", "work_NISA")
                            ),
-    time = as.numeric(duration_min)) #making duration into a numeric
+    #making duration into a numeric
+    time = as.numeric(duration_min),
+    time_hrs = as.numeric(duration_hours))
+
+
   
+
   #data wrangling for visualization 1
   class_data <- calendar_data %>% 
      #filter our overall variable by class only
@@ -102,16 +109,13 @@ Describe what information is conveyed through data visualization #1 (that you'll
 
 
 
-```{r}
-# Code for data visualization #1
-# Be sure to provide meaningful title and axes labels 
+```{r, eval = TRUE}
 
 ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
   geom_bar(position = "stack", stat = "identity") +
   labs(title = "Time Devoted to Each Class",
        x = "Classes",
-       y = "Total Time (min)") #+
-  # scale_fill_brewer(palette = )
+       y = "Total Time (min)") 
 ```
 
 <!--
@@ -121,8 +125,7 @@ Describe what information is conveyed through data visualization #2 (that you'll
 
 
 ```{r}
-# Code for data visualization #2
-# Be sure to provide meaningful title and axes labels 
+
 ggplot(calendar_data, aes(x = date, y = time,
                           color = overall)) + 
   geom_line() +
@@ -164,11 +167,15 @@ table <- calendar_data %>%
   rename(Category = overall) %>% 
   summarize(
     N = n(),
-    Average = mean(time),
+    Average = mean(time_hrs),
+    Min = min(time_hrs),
+    Max = max(time_hrs),
+    Total = sum(time_hrs)
     # class_avg = mean(class)
   ) %>% 
   arrange(desc(Average)) %>% 
-  kable(booktabs = TRUE, digits = 0)
+  kable(booktabs = TRUE, digits = 1) %>% 
+  kable_styling()
 
 table
 ```
