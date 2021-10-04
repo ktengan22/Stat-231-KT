@@ -214,7 +214,7 @@ Remember to load any necessary packages in the `setup` code chunk!
 
 
 
-```{r wrangle-text}
+```{r wrangle-text, eval = FALSE}
 glimpse(DataSciencePapers)
 
 DataSciencePapers <- DataSciencePapers %>%
@@ -247,7 +247,7 @@ arxiv_papers <- DataSciencePapers %>%
 <!--
 May need to install (but not load) the **tm** and **slam** packages to use the wordcloud function
 -->
-```{r word-cloud}
+```{r word-cloud, eval = FALSE}
 # May also need to install the "tm" package in order to use the function
 set.seed(1966)
 arxiv_papers %>%
