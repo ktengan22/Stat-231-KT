@@ -46,7 +46,7 @@ If you are using the code, be sure to update the capitalized parts with the rele
 As a reminder here's the link for exporting a Google calendar to ics (if on a Mac, you can hold cmd + click to open the page):
 https://support.google.com/calendar/answer/37111?hl=en&ref_topic=10509946
 -->
-```{r, warning = FALSE}
+```{r Data Wrangling, warning = FALSE}
 # Data import and preliminary wrangling
 calendar_data <- "ktdata3.ics" %>% 
   # Use ical package to import into R
@@ -84,7 +84,7 @@ calendar_data <- "ktdata3.ics" %>%
     #separating class and activity
     separate(summary, c("class", "activity"), "_", remove = FALSE) %>% 
     group_by(class, activity) %>% 
-    summarize(overall_time = sum(time))
+    summarize(overall_time = sum(time_hrs))
    
 
 # Compute total duration of time for each day & activity
@@ -117,16 +117,53 @@ For my second question, I wanted to look at the time devoted to all major activi
 
 **Data Collection & Variables:**
 
-Going into the project, I already had an idea for my visualizations and table. I inputted all of my data into one Google calendar. I knew that I wanted to see both the breakdown within my courses, as well as the overall course data. I decided to stay consistent with my naming of each activity, paying particular attention to the capitalization or format of the letters. For each of my four classes, I abbreviated the department in all capital letters (ex. Data Science \rightarrow STAT). I took it one step further for the specific activity. The capitalized abbreviation would then be followed by an underscore and then the activity in all lowercase (ex. studying for Data Science \rightarrow STAT_study). When I began coding my visualizations, I realized that I only had one variable. Since my class and work inputs were highly specified, I had to first create a new variable `overall` and collapse my class and work data into `class` and `work` to address my second question. In order to create my stacked bar chart, segmented by activities, I had to then create an `activity` variable by separating `class` by the underscore. 
+Going into the project, I already had an idea for my visualizations and table. I inputted all of my data into one Google calendar. I knew that I wanted to see both the breakdown within my courses, as well as the overall course data. I decided to stay consistent with my naming of each activity, paying particular attention to the capitalization or format of the letters. For each of my four classes, I abbreviated the department in all capital letters (ex. Data Science $\rightarrow$ STAT). I took it one step further for the specific activity. The capitalized abbreviation would then be followed by an underscore and then the activity in all lowercase (ex. studying for Data Science $\rightarrow$ STAT_study). When I began coding my visualizations, I realized that I only had one variable. Since my class and work inputs were highly specified, I had to first create a new variable `overall` and collapse my class and work data into `class` and `work` to address my second question. In order to create my stacked bar chart, segmented by activities, I had to then create an `activity` variable by separating `class` by the underscore. Here is a short breakdown of my variables and the data within each variable:
+
+### Visualization 1
+
+`ASLC` : Media History of Anime Seminar
+
+`STAT` : Data Science
+
+`NS` : Culture and Mental Health
+
+`ENST` : Environmental Studies Senior Seminar
+
+`study` : Total time spent reading, completing problem sets, and writing papers
+
+`OH` : Office hours
+
+`SDS` : SDS Fellows office hours
+
+### Visualization 2 
+
+`class` : Aggregate time spent attending all classes, office hours, and studying
+
+`gym` : Time spent at the gym 
+
+`rugby` : Time spent attending rugby practice
+
+`sleep` : When I fall asleep until when I wake up 
+
+`work` : Total time on paid work, attending club meetings, and any other meeting or work not related to academics 
+
 
 <!--
 Describe what information is conveyed through data visualization #1 (that you'll create below) here.
 -->
 
-## Visualization 1: Breakdown of Total Time (Min) Per Class
+#Results 
 
+## Visualization 1: Breakdown of Total Time (Hrs) Per Class
 
-```{r, eval = TRUE, fig.align='center'}
+### Discussion:
+
+  The most noticeable thing about this visualization is just how little time was spent on my Culture and Mental Health class compared to the other three. This Hampshire College course is scheduled to meet on Tuesday and Thursday for an hour and twenty minutes each day. By absolute coincidence during these two weeks of data collection, both September 16th and September 23rd were cancelled for Yom Kippur and Hampshire Advising Day, respectively. 
+  The distributions for my other three courses were similar and what I would have expected to observe. `ASLC` and `ENST` are both roughly three-hour seminars that meet once a week, so that class time should be greater than `STAT`. Additionally, this data shows me that I could, and should, be utilizing office hours more to reduce the overall time I spend studying. During those 16 days (384 hours), I only attended office and SDS hours a total of about two hours across those three classes. Contrary to the matter, I spent between 10 and 12 hours per class studying. Instead of struggling through problem sets, readings, and papers on my own, I would like to attend more office hours in the future.
+  
+### Code and Output:  
+
+```{r Figure 1, eval = TRUE, fig.align='center'}
 #creating plot from data in data frame class_data, segment the class by activity
 
 ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
@@ -135,26 +172,34 @@ ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
   #clean up the lables, add title
   labs(title = "Time Devoted to Each Class",
        x = "Classes",
-       y = "Total Time (min)"
-       ) 
+       y = "Total Time (hrs)"
+       ) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 ```
 
 <!--
 Describe what information is conveyed through data visualization #2 (that you'll create below) here.
 -->
 
-## Visualization 2: Time (Min) Devoted to Each Activity Per Day
+## Visualization 2: Time (Hrs) Devoted to Each Activity Per Day
 
-```{r, fig.align='center'}
+### Discussion:
+
+  The most noticeable thing about this visualization is just how little time was spent on my Culture and Mental Health class compared to the other three. This Hampshire College course is scheduled to meet on Tuesday and Thursday for an hour and twenty minutes each day. By absolute coincidence during these two weeks of data collection, both September 16th and September 23rd were cancelled for Yom Kippur and Hampshire Advising Day, respectively. 
+  The distributions for my other three courses were similar and what I would have expected to observe. `ASLC` and `ENST` are both roughly three-hour seminars that meet once a week, so that class time should be greater than `STAT`. Additionally, this data shows me that I could, and should, be utilizing office hours more to reduce the overall time I spend studying. During those 16 days (384 hours), I only attended office and SDS hours a total of about two hours across those three classes. Contrary to the matter, I spent between 10 and 12 hours per class studying. Instead of struggling through problem sets, readings, and papers on my own, I would like to attend more office hours in the future.
+  
+### Code and Output:
+
+```{r Figure 2, fig.align='center'}
 
 #create a time series separated by each overall activity
-ggplot(calendar_data, aes(x = date, y = time,
+ggplot(calendar_data, aes(x = date, y = time_hrs,
                           color = overall)) + 
   geom_line() +
   #make the labels look like and convey accurate information
   labs(title = "Time Series Graph Over 2 Weeks",
        subtitle = "Amount of Time Devote to Each Task Each Day",
-       y = "Total Time (Minutes)",
+       y = "Total Time (Hrs)",
        x = "Date (YYYY-MM-DD)",
        color = "Overall", lty = "Overall") +
   #Change date breaks on x axis so I can see every day over the two weeks
@@ -184,7 +229,7 @@ or
 
 ## Table 1: Overall Summary of Each Activity (Hrs)
 
-```{r, results = 'asis'}
+```{r Table 1, results = 'asis'}
 # Create new dataframe from dataframe calendar_data
 table <- calendar_data %>% 
   # I am interested just in the overall data
@@ -197,8 +242,7 @@ table <- calendar_data %>%
     Min = min(time_hrs),
     Max = max(time_hrs),
     Total = sum(time_hrs)
-    # class_avg = mean(class)
-  ) %>% 
+    ) %>% 
   #arrange in descending order
   arrange(desc(Average)) %>% 
   #make aesthetically pleasing and change number of digits following decimal.
