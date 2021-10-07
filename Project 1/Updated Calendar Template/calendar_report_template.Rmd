@@ -36,7 +36,7 @@ Please rename the headings.
 You may add subheadings as desired to break up the report. 
 -->
 
-# YOUR REPORT HEADING <!-- (e.g., How do I spend my time?) -->
+# Data Wrangling <!-- (e.g., How do I spend my time?) -->
 
 <!--
 The code below is provided as a starting point for importing an `ics` file into R as a dataframe, doing some initial wrangling, and adding up the time spent on each activity. You are not required to use this code, so delete or modify it as you see fit. 
@@ -54,7 +54,7 @@ calendar_data <- "ktdata3.ics" %>%
   # Convert to "tibble" data frame format
   as_tibble() %>% 
   mutate(
-    # Use lubridate package to wrangle dates and times
+    # Use lubricate package to wrangle dates and times
     start_datetime = with_tz(start, tzone = "America/New_York"),
     end_datetime = with_tz(end, tzone = "America/New_York"),
     duration_min = difftime(end_datetime, start_datetime, units = "mins"),
@@ -99,45 +99,69 @@ activities <- calendar_data %>%
 Describe your question(s) here.  Briefly describe your data collection process, including how you defined variables of interest.
 -->
 
+# Questions and Design
 
 
+
+## Questions of Interest: 
+
+
+**Question 1:** *How much time do I spend on each course?* 
+
+I wanted to explore how much time I was spending on each class. Within this question, I had two aspects of interest. Looking solely at the class data in my calendar, I wanted to see how much total time was devote to each course and compare that data with the other classes. Secondly, I wanted to see the breakdown of each individual class. Within any given class, I wanted to know how much time I devoted to studying, actually attending the class, visiting office hours, and if applicable, how much time was spent attending SDS hours. 
+
+**Question 2:** *How do my times spent on each activity during those two weeks compare to one another?*
+
+For my second question, I wanted to look at the time devoted to all major activities during my day. I wanted to explore any interesting trends over the two weeks of data collection. I was curious how much of my day I was devoting to school, exercise, self care, leisure, sleep, and paid work. 
+
+
+**Data Collection & Variables:**
+
+Going into the project, I already had an idea for my visualizations and table. I inputted all of my data into one Google calendar. I knew that I wanted to see both the breakdown within my courses, as well as the overall course data. I decided to stay consistent with my naming of each activity, paying particular attention to the capitalization or format of the letters. For each of my four classes, I abbreviated the department in all capital letters (ex. Data Science \rightarrow STAT). I took it one step further for the specific activity. The capitalized abbreviation would then be followed by an underscore and then the activity in all lowercase (ex. studying for Data Science \rightarrow STAT_study). When I began coding my visualizations, I realized that I only had one variable. Since my class and work inputs were highly specified, I had to first create a new variable `overall` and collapse my class and work data into `class` and `work` to address my second question. In order to create my stacked bar chart, segmented by activities, I had to then create an `activity` variable by separating `class` by the underscore. 
 
 <!--
 Describe what information is conveyed through data visualization #1 (that you'll create below) here.
 -->
 
+## Visualization 1: Breakdown of Total Time (Min) Per Class
 
 
-
-```{r, eval = TRUE}
+```{r, eval = TRUE, fig.align='center'}
+#creating plot from data in data frame class_data, segment the class by activity
 
 ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
+  #create a stacked segmented bar chart
   geom_bar(position = "stack", stat = "identity") +
+  #clean up the lables, add title
   labs(title = "Time Devoted to Each Class",
        x = "Classes",
-       y = "Total Time (min)") 
+       y = "Total Time (min)"
+       ) 
 ```
 
 <!--
 Describe what information is conveyed through data visualization #2 (that you'll create below) here.
 -->
 
+## Visualization 2: Time (Min) Devoted to Each Activity Per Day
 
+```{r, fig.align='center'}
 
-```{r}
-
+#create a time series separated by each overall activity
 ggplot(calendar_data, aes(x = date, y = time,
                           color = overall)) + 
   geom_line() +
+  #make the labels look like and convey accurate information
   labs(title = "Time Series Graph Over 2 Weeks",
        subtitle = "Amount of Time Devote to Each Task Each Day",
        y = "Total Time (Minutes)",
        x = "Date (YYYY-MM-DD)",
        color = "Overall", lty = "Overall") +
-  #Change date breaks 
+  #Change date breaks on x axis so I can see every day over the two weeks
   scale_x_datetime(date_breaks = "1 days") +
-  #increase y labels (add 10 breaks)
+  #Increase y labels (add 10 breaks)
   scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + 
+  #Rotates x axis labels 90 degrees for readability 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(1)))
          
        
@@ -158,12 +182,14 @@ or
   https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf
 -->
 
-
+## Table 1: Overall Summary of Each Activity (Hrs)
 
 ```{r, results = 'asis'}
-# Code for table
+# Create new dataframe from dataframe calendar_data
 table <- calendar_data %>% 
+  # I am interested just in the overall data
   group_by(overall) %>% 
+  #Renaming variable overall
   rename(Category = overall) %>% 
   summarize(
     N = n(),
@@ -173,8 +199,11 @@ table <- calendar_data %>%
     Total = sum(time_hrs)
     # class_avg = mean(class)
   ) %>% 
+  #arrange in descending order
   arrange(desc(Average)) %>% 
+  #make aesthetically pleasing and change number of digits following decimal.
   kable(booktabs = TRUE, digits = 1) %>% 
+  #center
   kable_styling()
 
 table
