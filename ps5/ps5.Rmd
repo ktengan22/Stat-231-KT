@@ -97,6 +97,7 @@ Source(s) and corresponding problem(s)
 # load packages
 library(tidyverse)
 library(kableExtra)
+library(robotstxt)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -120,7 +121,7 @@ options(scipen = 1, knitr.kable.NA = '')
 ```{r}
 url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States"
 
-
+paths_allowed(url)
 ```
 
 ## <!-- 1.1 -->Go to the [List of Justices of the Supreme Court of the United States](https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States). Create a new R script called "scrape-justices.R", and scrape the table of justices. Use `janitor::clean_names()` to tidy the names of the columns (do not do any additional wrangling beyond this for now), then write the final data frame to a csv file called "justices.csv" in the "data" folder using the `write_csv()` function. Commit and push both files in addition to this Rmd file when ready.
