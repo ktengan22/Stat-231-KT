@@ -1,6 +1,6 @@
 ---
 title: "Lab 10: Networks"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "October 7, 2021"
 urlcolor: blue
 linkcolor: blue
@@ -54,7 +54,6 @@ header-includes:
 # load packages
 library(tidyverse)
 library(kableExtra)
-
 library(ggnetwork)
 library(igraph)
 
@@ -192,7 +191,19 @@ migration_easteur <- migration_flows_fem %>%
 ## <!-- 1.5 -->Follow the steps from 1.2 and 1.3 to create a similar visualization but just for the eastern European countries selected, using only the minimal code you need to accomplish the task (e.g., you don't need to count edges). 
 
 ```{r, fig.align = "center", fig.height = 3.5}
+migration_igraph2 <- graph_from_data_frame(migration_easteur,
+           directed = TRUE)
 
+migration_network2 <- ggnetwork(migration_igraph2)
+head(migration_network2)
+
+ggplot(data = migration_network2, aes(x = x, y = y, 
+          xend = xend, yend = yend)) +
+ geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
+    color = "lightgray") +
+ geom_nodes() +
+ geom_nodelabel(aes(label = name)) +
+ theme_blank()
 ```
 
 <!-- Part 2 ------------------------------------------------------------------->
