@@ -210,13 +210,13 @@ ggplot(data = migration_network2, aes(x = x, y = y,
 # <!-- 2 -->**Customizing the network graph** The plot of this network is much clearer than a plot of the entire network. We can see that some countries like Russia and Belarus are not popular migration destinations while other countries, like Poland and Hungary are (though we can't see the numbers migrating into these countries from this graph). Let's see how we can customize the network graph further.
 
 ## <!-- 2.1 -->Recalling that `Y2000` represents female migration in 2000, is this an edge or vertex attribute?
-
+Y200 is an edge. 
 
 
 ## <!-- 2.2 -->Let's modify the graph so that edge width is a function of migration flow size. In `ggplot()` we can do this using the `size` option in `geom_edges()`. 
 
 ```{r, fig.align = "center", fig.height = 3.5}
-ggplot(data = migration_easteur_network, 
+ggplot(data = migration_network2, 
     aes(x = x, y = y, 
       xend = xend, yend = yend)) +
  geom_edges(arrow = arrow(type = "closed", angle = 10),
@@ -231,10 +231,11 @@ ggplot(data = migration_easteur_network,
 
 ## <!-- 1.8 -->We could, instead, map edge color to the migration flow size. Which do you think is the more effective visual cue in this case?
 
+I think the more effective one is the edge width through ti can get cluttered at times. I feel that with the color it is hard to see the distinction between the various edges. 
 
 
 ```{r, fig.align = "center", fig.height = 3.5}
-ggplot(data = migration_easteur_network, 
+ggplot(data = migration_network2, 
     aes(x = x, y = y, 
       xend = xend, yend = yend)) +
  geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")), 
@@ -251,7 +252,7 @@ ggplot(data = migration_easteur_network,
 
 
 ```{r, fig.align = "center", fig.height = 3.5}
-ggplot(data = migration_easteur_network,
+ggplot(data = migration_network2,
     aes(x = x, y = y, 
       xend = xend, yend = yend)) +
  geom_edges(arrow = arrow(type = "closed", length = unit(8, "pt")),
@@ -270,33 +271,33 @@ ggplot(data = migration_easteur_network,
 # <!-- 2 -->**Network centrality statistics** Let's consider some centrality statistics for the Eastern European migration network. We'll use `degree()` and `strength()` from the **igraph** package for this.
 
 ## <!-- 2.1 -->Based on *degree centrality*, which country(countries) were most central to the migration network of Eastern Europe in 2000? Does the answer differ depending on whether we consider all edges (total degree), or only outgoing edges (out-degree; how many destinations were there from that origin country?) or only incoming edges (in-degree; how many origins were there to that destination country?)?
-
+Based on the degree, I feel like Poland is the most central to the network. We see that there were a total of 18 migrations, 9 out and 9 in. 
 
 
 ```{r}
-igraph::degree(migration_easteur_igraph) 
+igraph::degree(migration_igraph2) 
 
-igraph::degree(migration_easteur_igraph, mode = "out")
+igraph::degree(migration_igraph2, mode = "out")
 
-igraph::degree(migration_easteur_igraph, mode = "in") 
+igraph::degree(migration_igraph2, mode = "in") 
 ```
 
 ## <!-- 2.2 -->The `degree()` function only counts the number of edges of each node, but it does not account for the varying weights of those edges. We can use the `strength()` function to compute the weighted degrees instead. Do the same countries stand out as having high degree centrality after considering the weighted edges?
 
-
+After considering the weighted degrees, we see that UKR has the greatest number for total movement. We would not have been able to know that if we had just looked at degrees. 
 
 ```{r}
 # Get edge weights 
-migration_edge_weights <- edge_attr(migration_easteur_igraph, name = "Y2000")
+migration_edge_weights <- edge_attr(migration_igraph2, name = "Y2000")
 
 # Total movement
-strength(migration_easteur_igraph, weights = migration_edge_weights)
+strength(migration_igraph2, weights = migration_edge_weights)
 
 # Total movement out
-strength(migration_easteur_igraph, weights = migration_edge_weights, mode = "out") 
+strength(migration_igraph2, weights = migration_edge_weights, mode = "out") 
 
 # Total movement in
-strength(migration_easteur_igraph, weights = migration_edge_weights, mode = "in")
+strength(migration_igraph2, weights = migration_edge_weights, mode = "in")
 ```
 
 <!-- Part 3 ------------------------------------------------------------------->
@@ -312,37 +313,52 @@ got <- read_csv("data/storm-of-swords.csv")
 
 ## <!-- 3.2 -->How many GoT characters (nodes) and character interactions (edges) are in this network? 
 
-
+There are 107 nodes (vertices) and 352 edges in this network
 
 ```{r}
 # Create igraph object
 
+got_igraph <- graph_from_data_frame(got,
+           directed = FALSE)
+summary(got_igraph)
 
 # Identify number of nodes and edges
+# Get descriptions and counts of vertices
+V(got_igraph)
+vcount(got_igraph)
 
+# Get descriptions and counts of edges
+E(got_igraph)
+ecount(got_igraph)
 ```
 
 ## <!-- 3.3 -->What proportion of possible edges are realized? This proportion is referred to as the "density" of a graph, which is a measure of how close the number of observed edges are to the maximal possible number of edges. Density ranges from 0 (least dense or sparser) to 1 (most dense) and can be obtained with the `edge_density()` function from **igraph**. Use this function to get the density, and verify it's correct by calculating the density yourself. 
 
-> Note: The number of *possible* edges in an undirected graph is ${V \choose 2} = \frac{V(V-1)}{2}$.
+> Note: The number of *possible* edges in an undirected graph is 
 
+${V \choose 2} = \frac{V(V-1)}{2}$.
 
+The edge density of this network is 0.06207. When we calculate the number by hand using the equation of possible edges, we get the same number. 
 
 ```{r}
+edge_density(got_igraph)
 
+pe <- (107*106)/2
+
+352/pe
 ```
 
 ## <!-- 3.4 -->The function `is_connected()` returns "TRUE" if a graph is connected and "FALSE" otherwise. Is this graph connected? And if so, what does that mean? How would you be able to tell that the graph was connected by looking at Figure 2 in the [*Network of Thrones*](https://www-jstor-org.ezproxy.amherst.edu/stable/10.4169/mathhorizons.23.4.18) paper?
 
-
+`is_connected()` returns "TRUE" meaning the graph is connected. We can see this by using our eyes. All the nodes are connected to edges. All the characters are seen on the graph. 
 
 ```{r}
-
+is_connected(got_igraph)
 ```
 
 ## <!-- 3.5 -->Use the code below to compute the diameter of the network. Interpret the value.
 
-
+The diameter of the network is 6 meaning that the greatest distance between any pair of vertices in the network is 6 units. 
 
 ```{r}
 diameter(got_igraph, directed = FALSE)
