@@ -368,7 +368,7 @@ diameter(got_igraph, directed = FALSE)
 # <!-- 4 -->**Network of Thrones: Centrality statistics** Next, let's consider the centrality statistics for characters in the network. The node degree counts the number of characters that a given character (node) is associated with. The weighted degree (given by `strength()`) is the sum of the edge weights for edges connecting one character (node) to other characters. In other words, the strength counts the total number of interactions a character has with others in the network. Below, we compute the degree and strength of each node, and combine these vectors into a dataframe. 
 
 <!-- Set eval = TRUE when you get to this code chunk -->
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 got_stats <- data.frame(name = vertex_attr(got_igraph, "name"),
             degree = degree(got_igraph),
             strength = strength(got_igraph,
@@ -377,6 +377,7 @@ got_stats <- data.frame(name = vertex_attr(got_igraph, "name"),
 
 ## <!-- 4.1 -->Who are the five characters with highest degree? Highest weighted degree? Verify that these values (look like they) match those in Figure 3 of the [*Network of Thrones*](https://www-jstor-org.ezproxy.amherst.edu/stable/10.4169/mathhorizons.23.4.18) paper. 
 
+The five characters with the highest degree are Tyrion, Jon, Robb, Sansa, and Jaime. The five characters with the highest weighted degree are Tyrion, Jon, Sansa, Jaime, and Bran. 
 
 
 ```{r}
@@ -385,7 +386,7 @@ got_stats <- data.frame(name = vertex_attr(got_igraph, "name"),
 
 ## <!-- 4.2 -->Explain how Robb can have higher degree than Bran but lower weighted degree.
 
-
+Robb may have a higher degree but lower weighted degree because he may have more total edges, yet they may not be as weighted as Bran. This is just like the question we did above using degree and strength. 
 
 ```{r}
 
@@ -393,7 +394,7 @@ got_stats <- data.frame(name = vertex_attr(got_igraph, "name"),
 
 ## <!-- 4.3 -->Now consider the (unweighted) *betweenness* measure of centrality. In the code below, we use the `betweenness()` function to calculate the unweighted betweenness of the nodes, and add this statistics to the `got_stats` data frame using `add_column()`. Verify that the top ranked characters match those shown in Figure 3 of the *Network of Thrones* paper.
 
-
+Yes it does match both figure 2 and 3. 
 
 <!-- Set eval = TRUE when you get to this code chunk -->
 ```{r, eval = FALSE}
