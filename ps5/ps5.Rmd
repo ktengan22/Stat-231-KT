@@ -98,6 +98,10 @@ Source(s) and corresponding problem(s)
 library(tidyverse)
 library(kableExtra)
 library(robotstxt)
+library(rvest) 
+library(purrr) 
+library(janitor)
+library(knitr)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -131,7 +135,7 @@ Add your code from justices.R to the code chunk below.
 
 We do not want to re-run the code when we knit (we just want it to appear in the final pdf for the grader), so leave eval = FALSE in the chunk below.
 -->
-```{r, eval = FALSE}
+```{r code for justices.R, eval = FALSE}
 url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States"
 
 tables <- url %>% 
@@ -151,9 +155,9 @@ write_csv(scj, paste0(outpath, "/justices.csv"))
 
 
 
-```{r, fig.width = 3.6, fig.height = 2.4, fig.align = "center"}
+```{r visualization, fig.width = 3.6, fig.height = 2.4, fig.align = "center"}
 
-read_csv(paste0(outpath, "/justices.csv"))
+justices <- read_csv(paste0(outpath, "/justices.csv"))
 
 # Run after loading your justices.csv file
 justices <- justices %>%
@@ -168,7 +172,13 @@ justices <- justices %>%
   # Make date_confirmed_vote into date variable
   separate(date_confirmed_vote, into = c("date_confirmed", "vote"),
            sep = "\\(") %>%
+  mutate(tenure_length = tenure_years) %>% 
   mutate(date_confirmed = lubridate::mdy(date_confirmed))
+
+ggplot(justices, aes(x = tenure_length)) + 
+  geom_histogram() +
+  labs(x = "Term Length (Years)",
+       y = "Count")
 
 ```
 
@@ -219,13 +229,37 @@ Add your code from scrape-quotes.R to the code chunk below.
 We do not want to re-run the code when we knit (we just want it to appear in the final pdf for the grader), so leave eval = FALSE in the chunk below.
 -->
 ```{r, eval = FALSE}
+quotes_url <- "https://www.brainyquote.com/topics/funny-quotes_17"
+robotstxt::paths_allowed(quotes_url)
+
+quotes_html <- read_html(quotes_url)
+
+quotes <- quotes_html %>%
+  html_elements(".oncl_q") %>%
+  html_text()
+
+people <- quotes_html %>%
+  html_elements(".oncl_a") %>%
+  html_text()
+
+funny_quotes <- tibble(person = people, quote = quotes) %>% 
+  mutate(quote = str_remove_all(quote, "\n\n"),
+         # Prep quotes for markdown display when `results = "asis"`
+         display = paste0('> *"', as.character(quote), '"* --' , as.character(person)))
+
+outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
+write_csv(funny_quotes, paste0(outpath, "/quotes.csv"))
 
 ```
 
 ## <!-- 2.2 -->Load "quotes.csv" into this file using the `read_csv()` function.  Write code to select *three* of the quotes at random and print them (i.e., set `n = 3` in the `slice_sample()` function).
 
 ```{r, results = "asis"}
+funny_quotes <- read_csv(paste0(outpath, "/quotes.csv"))
 
+slice_sample(funny_quotes, n = 3) %>% 
+  pull(display) %>% 
+  cat()
 ```
 
 <!--
