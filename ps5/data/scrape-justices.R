@@ -15,7 +15,7 @@ scj <- html_table(tables[[2]], fill = TRUE) %>%
   #clean the names
   janitor::clean_names() 
 #create an object for outpath
-outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
+# outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
 #write the csv file pulling scj table and paste0 combines outpath with writecsv
-write_csv(scj, paste0(outpath, "/justices.csv"))
- 
+# write_csv(scj, paste0(outpath, "/justices.csv"))
+write_csv(scj, "data/justices.csv")

@@ -23,6 +23,7 @@ funny_quotes <- tibble(person = people, quote = quotes) %>%
          # Prep quotes for markdown display when `results = "asis"`
          display = paste0('> *"', as.character(quote), '"* --' , as.character(person)))
 
-outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
-write_csv(funny_quotes, paste0(outpath, "/quotes.csv"))
+# outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
+# write_csv(funny_quotes, paste0(outpath, "/quotes.csv"))
+write_csv(funny_quotes, "data/quotes.csv")
 
