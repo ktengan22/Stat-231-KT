@@ -132,7 +132,19 @@ Add your code from justices.R to the code chunk below.
 We do not want to re-run the code when we knit (we just want it to appear in the final pdf for the grader), so leave eval = FALSE in the chunk below.
 -->
 ```{r, eval = FALSE}
+url <- "https://en.wikipedia.org/wiki/List_of_justices_of_the_Supreme_Court_of_the_United_States"
 
+tables <- url %>% 
+  read_html() %>% 
+  html_elements("table")
+#pluck the html table
+scj <- html_table(tables[[2]], fill = TRUE) %>%  
+  #clean the names
+  janitor::clean_names() 
+#create an object for outpath
+outpath <- "/Users/tpkt/Desktop/College2021-2022/Stats231/Personal Repo/Stat-231-KT/ps5/data"
+#write the csv file pulling scj table and paste0 combines outpath with writecsv
+write_csv(scj, paste0(outpath, "/justices.csv"))
 ```
 
 ## <!-- 1.2 -->Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_length` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
@@ -140,6 +152,8 @@ We do not want to re-run the code when we knit (we just want it to appear in the
 
 
 ```{r, fig.width = 3.6, fig.height = 2.4, fig.align = "center"}
+
+read_csv(paste0(outpath, "/justices.csv"))
 
 # Run after loading your justices.csv file
 justices <- justices %>%
