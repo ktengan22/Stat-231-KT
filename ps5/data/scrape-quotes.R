@@ -27,3 +27,4 @@ funny_quotes <- tibble(person = people, quote = quotes) %>%
 # write_csv(funny_quotes, paste0(outpath, "/quotes.csv"))
 write_csv(funny_quotes, "data/quotes.csv")
 
+

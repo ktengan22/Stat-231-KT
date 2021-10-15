@@ -154,7 +154,7 @@ write_csv(scj, "data/justices.csv")
 
 ## <!-- 1.2 -->Load "justices.csv" into this file using the `read_csv()` function. Then, modify the code below as needed and run the code to create the variable `tenure_length` (a numeric variable containing each justice's time spent on the bench). Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
 
-
+The histogram is right skewed, with about three peaks. The most sc justices served about 8 years, then the second most served about 18, and then 5-7 served between 25 and 30 years. 
 
 ```{r visualization, fig.width = 3.6, fig.height = 2.4, fig.align = "center"}
 

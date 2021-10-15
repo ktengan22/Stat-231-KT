@@ -19,3 +19,4 @@ scj <- html_table(tables[[2]], fill = TRUE) %>%
 #write the csv file pulling scj table and paste0 combines outpath with writecsv
 # write_csv(scj, paste0(outpath, "/justices.csv"))
 write_csv(scj, "data/justices.csv")
+
