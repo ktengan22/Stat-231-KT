@@ -1,6 +1,6 @@
 ---
 title: "Reading Set 6"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "Due by 10pm ET on Monday"
 urlcolor: blue
 linkcolor: blue
@@ -80,6 +80,8 @@ You can resubmit your work as many times as you want before the deadline, so you
 # load packages
 library(tidyverse)
 library(kableExtra)
+library(sf)
+library(ggspatial)
 
 
 # set code chunk defaults
@@ -137,6 +139,9 @@ ggplot(cholera_deaths) +
 ```
 
 ## <!-- 1.3 -->Now use the **ggspatial** package to overlay the London street map. Make sure you (install then) load the **ggspatial** package in the `setup` code chunk before running the code. What is wrong with this map? 
+
+> The points are not in the right places. The coordinates in CholeraDeaths and
+the maps from ggspatial have geospatial coordinates in different units. 
 
 ```{r}
 ggplot(cholera_deaths) + 
