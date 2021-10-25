@@ -82,6 +82,7 @@ library(tidyverse)
 library(kableExtra)
 library(sf)
 library(ggspatial)
+library(leaflet)
 
 
 # set code chunk defaults
@@ -180,7 +181,7 @@ ggplot(cholera_latlong) +
 Dynamic plot will not knit to pdf so set `eval = FALSE`
 -->
 
-```{r}
+```{r, eval = FALSE}
 # create dynamic map
 leaflet() %>% 
   addTiles() %>%
