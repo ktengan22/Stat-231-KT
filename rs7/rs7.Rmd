@@ -1,6 +1,6 @@
 ---
 title: "Reading Set 7"
-author: "Your Name"
+author: "Kauila"
 date: "Due by 10pm ET on Monday"
 urlcolor: blue
 linkcolor: blue
@@ -80,6 +80,8 @@ You can resubmit your work as many times as you want before the deadline, so you
 # load packages
 library(tidyverse)
 library(kableExtra)
+library(mdsr)
+library(mclust)
 
 # set code chunk defaults
 knitr::opts_chunk$set(tidy = F, # display code as typed
@@ -109,15 +111,63 @@ big_cities <- world_cities %>%
   head(4000) %>%
   select(longitude, latitude)
 
+big_cities2 <- world_cities %>%
+  arrange(desc(population)) %>%
+  head(4000) %>%
+  select(longitude, latitude)
+
+big_cities3 <- world_cities %>%
+  arrange(desc(population)) %>%
+  head(4000) %>%
+  select(longitude, latitude)
+
 # Make sure to set seed for reproducibility!
 set.seed(15)
 city_kmeans_results <- big_cities %>% 
   kmeans(centers = 6, nstart = 30) 
+
+set.seed(15)
+city_kmeans_results2 <- big_cities2 %>% 
+  kmeans(centers = 3, nstart = 30) 
+
+set.seed(15)
+city_kmeans_results3 <- big_cities3 %>% 
+  kmeans(centers = 15, nstart = 30) 
 ```
 
 ## <!-- 1.2 -->The textbook code skips over much of the important output we get from running the `kmeans()` function (*note*: it's not clear that the fitted clusters are worth grabbing---we can get assigned clusters from the `kmeans()` output already!). The code below reports on the class of the `city_kmeans_results` and the named elements we can refer to and select from that class. What type of object is `city_kmeans_results`? What named elements does the object contain and what information does each element give us? *Hint*: the **Value** section of the help documention will help you understand what each named element is. 
 
+> The class is kmeans. 
 
+"kmeans returns an object of class "kmeans" which has a print and a fitted method. It is a list with at least the following components:
+
+cluster	
+A vector of integers (from 1:k) indicating the cluster to which each point is allocated.
+
+centers	
+A matrix of cluster centres.
+
+totss	
+The total sum of squares.
+
+withinss	
+Vector of within-cluster sum of squares, one component per cluster.
+
+tot.withinss	
+Total within-cluster sum of squares, i.e. sum(withinss).
+
+betweenss	
+The between-cluster sum of squares, i.e. totss-tot.withinss.
+
+size	
+The number of points in each cluster.
+
+iter	
+The number of (outer) iterations.
+
+ifault	
+integer: indicator of a possible algorithm problem – for experts." - taken directly 
+from `?kmeans` in rstudio. 
 
 ```{r}
 # Check object class or type
@@ -129,7 +179,9 @@ names(city_kmeans_results)
 
 ## <!-- 1.3 -->Where are the estimated centroids of the 6 clusters? How many cities were assigned to the first cluster? Which cluster contains the most cities?
 
-
+> The estimaded centroids of the 6 clusters are the continents. 726 cities were 
+assigned to the first cluster, but the 6th cluster contains the most cities 
+with 988. 
 
 ```{r}
 # Centroids
@@ -140,6 +192,8 @@ city_kmeans_results$size
 ```
 
 ## <!-- 1.4 -->Run the code below to create a plot of the assigned clusters. What do you think Cluster 2 represents? 
+
+> Cluster 2 represents North and Central America. 
 
 ```{r}
 # Join cluster assignments with original dataset
@@ -163,10 +217,32 @@ ggplot(big_cities, aes(x = longitude, y = latitude)) +
 
 ## <!-- 1.5 -->In $k$-means clustering, the analyst specifies the number of clusters to create.  Update the `center` argument within the `kmeans()` function to identify 3 clusters instead of 6.  Create a plot like the one above, but coloring the points by these new cluster assignments.  How many cities are in Cluster 1 now?  What does Cluster 2 represent now?
 
+> There are 1,466 cities in cluster 1 now. Cluster 2 now represents North, Central
+and South America. 
+
+```{r}
+city_kmeans_results2$size
+```
 
 
 ```{r}
+# Join cluster assignments with original dataset
+big_cities2 <- big_cities %>% 
+  add_column(cluster = factor(city_kmeans_results2$cluster))
 
+# Make dataframe out of estimated cluster centroids
+city_cluster_centers2 <- city_kmeans_results2$centers %>%
+  data.frame() %>% 
+  add_column(cluster_number = 1:3)
+
+# Plot cluster assignments and centroids
+ggplot(big_cities2, aes(x = longitude, y = latitude)) +
+  geom_point(aes(color = cluster), alpha = 0.6)  + 
+  scale_color_brewer(palette = "Spectral") +
+  geom_label(data = city_cluster_centers2, 
+             aes(label = cluster_number), 
+             size = 3) + 
+  theme(legend.position = "none")
 ```
 
 ## <!-- 1.5 -->Update the `center` argument within the `kmeans()` function to identify 15 clusters.  Create a plot like the one above, but coloring the points by these new cluster assignments.  How many cities are in Cluster 1 now?  What does Cluster 2 represent now?
@@ -174,7 +250,22 @@ ggplot(big_cities, aes(x = longitude, y = latitude)) +
    
 
 ```{r}
+big_cities3 <- big_cities %>% 
+  add_column(cluster = factor(city_kmeans_results3$cluster))
 
+# Make dataframe out of estimated cluster centroids
+city_cluster_centers3 <- city_kmeans_results3$centers %>%
+  data.frame() %>% 
+  add_column(cluster_number = 1:15)
+
+# Plot cluster assignments and centroids
+ggplot(big_cities3, aes(x = longitude, y = latitude)) +
+  geom_point(aes(color = cluster), alpha = 0.6)  + 
+  scale_color_brewer(palette = "Spectral") +
+  geom_label(data = city_cluster_centers3, 
+             aes(label = cluster_number), 
+             size = 3) + 
+  theme(legend.position = "none")
 ```
 
 
