@@ -227,8 +227,9 @@ city_kmeans_results2$size
 
 ```{r}
 # Join cluster assignments with original dataset
+
 big_cities2 <- big_cities %>% 
-  add_column(cluster = factor(city_kmeans_results2$cluster))
+  add_column(cluster1 = factor(city_kmeans_results2$cluster))
 
 # Make dataframe out of estimated cluster centroids
 city_cluster_centers2 <- city_kmeans_results2$centers %>%
@@ -237,7 +238,7 @@ city_cluster_centers2 <- city_kmeans_results2$centers %>%
 
 # Plot cluster assignments and centroids
 ggplot(big_cities2, aes(x = longitude, y = latitude)) +
-  geom_point(aes(color = cluster), alpha = 0.6)  + 
+  geom_point(aes(color = cluster1), alpha = 0.6)  + 
   scale_color_brewer(palette = "Spectral") +
   geom_label(data = city_cluster_centers2, 
              aes(label = cluster_number), 
@@ -256,7 +257,7 @@ city_kmeans_results3$size
 
 ```{r}
 big_cities3 <- big_cities %>% 
-  add_column(cluster = factor(city_kmeans_results3$cluster))
+  add_column(cluster2 = factor(city_kmeans_results3$cluster))
 
 # Make dataframe out of estimated cluster centroids
 city_cluster_centers3 <- city_kmeans_results3$centers %>%
@@ -265,7 +266,7 @@ city_cluster_centers3 <- city_kmeans_results3$centers %>%
 
 # Plot cluster assignments and centroids
 ggplot(big_cities3, aes(x = longitude, y = latitude)) +
-  geom_point(aes(color = cluster), alpha = 0.6)  + 
+  geom_point(aes(color = cluster2), alpha = 0.6)  + 
   scale_color_brewer(palette = "Spectral") +
   geom_label(data = city_cluster_centers3, 
              aes(label = cluster_number), 
