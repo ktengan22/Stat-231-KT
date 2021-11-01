@@ -247,7 +247,12 @@ ggplot(big_cities2, aes(x = longitude, y = latitude)) +
 
 ## <!-- 1.5 -->Update the `center` argument within the `kmeans()` function to identify 15 clusters.  Create a plot like the one above, but coloring the points by these new cluster assignments.  How many cities are in Cluster 1 now?  What does Cluster 2 represent now?
 
-   
+> There are now 593 cities in cluster 1 now. Cluster 2 now represents either the UK,
+Italy, France, Spain, or even perhaps Greenland. It is hard to tell. 
+
+```{r}
+city_kmeans_results3$size
+```   
 
 ```{r}
 big_cities3 <- big_cities %>% 
