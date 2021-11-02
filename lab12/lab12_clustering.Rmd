@@ -373,7 +373,7 @@ ccdata_scaled$size
 
 
 ```{r}
-
+ccdata_scaled$centers
 ```
 
 ## <!-- 4.3 -->In 1-3 sentences, explain how you would expect the results to be different had you forgotten to standardize the variables prior to clustering.
