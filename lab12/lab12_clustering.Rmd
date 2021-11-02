@@ -297,7 +297,7 @@ ma_sample2 %>%
 <!-- Part 3 ------------------------------------------------------------------->
 # <!-- 3 -->**Extracting meaning** Clustering methods don't just determine clusters based on individual variable values, but rather how these $p$ variables relate in $p$-dimensional space (e.g. clusters in $\mathbb{R}^5$ for this example). We are limited for now to 2D visualizations, however. We can examine a *scatterplot matrix* using the ggplot "add on" package, **GGally**. Run the code below to see the `ggpairs()` function in action. Consider both the density plots and the scatterplots.  What are the defining characteristics of each cluster?
 
-
+Red cluster has lower admissions rates but higher SAT scores. 
 
 ```{r}
 # Scatterplot matrix of clusters based on scaled variables
@@ -342,8 +342,29 @@ GGally::ggpairs(data = ma_sample2, aes(color = clusters3_unscaled),
 
 
 ```{r}
-ccdata <- read_csv("data/cc-general.csv") 
+ccdata <- read_csv("data/cc-general.csv") %>% 
+ # Additional variables are character but should be numeric
+  mutate(
+         # Standardize or scale() numeric variables (subtract mean and divide by SD)
+         across(where(is.numeric),  ~ scale(.)[,1], .names = "{.col}_scaled")) %>%
+  # Drop rows with missing values (kmeans breaks with missing values)
+  drop_na()
 
+set.seed(23)
+ccdata_scaled <- ccdata %>% 
+  select(ends_with("scaled")) %>% 
+  kmeans(centers = 3, nstart = 20)
+
+# Centroids
+ccdata_scaled$centers
+
+# Cluster sizes
+ccdata_scaled$size
+
+ccdata_scaled_clustered <- ccdata %>%  
+ add_column(cluster = factor(ccdata_scaled$cluster))
+
+ccdata_scaled$size
 
 ```
 
