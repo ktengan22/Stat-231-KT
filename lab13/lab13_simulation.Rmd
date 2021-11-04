@@ -1,6 +1,6 @@
 ---
 title: "Lab 13: Simulation"
-author: "Your Name"
+author: "Kauila Tengan"
 date: "November 4, 2021"
 urlcolor: blue
 linkcolor: blue
@@ -204,6 +204,16 @@ ggplot(data.frame(binom_vec), aes(x = binom_vec)) +
   labs(x = "x",
        title = "Values generated from Binomial distribution",
        subtitle = "Size = 10, p = 0.2")
+
+# Bernoulli: `rbinom(n = , size = 1, p = )`
+
+bern_vec <- rbinom(n = 1000, size = 1, p = 0.85)
+
+ggplot(data.frame(bern_vec), aes(x = bern_vec)) +
+  geom_bar(color = "black", fill = "grey") + 
+  labs(x = "x",
+       title = "Values generated from Binomial distribution",
+       subtitle = "Size = 1, p = 0.2")
 ```
 
 ## <!-- 2.2 -->**Multivariate Normal distribution**
@@ -255,6 +265,8 @@ plot_ly(x = mvn_3d$x, y = mvn_3d$y, z = mvn_3d$z) %>%
 We typically refer to $n$ as the sample size in statistics. In simulations, we are usually conducting repeated sampling of samples of the same size. We must be careful, then, to distinguish between the number of times we want to simulate or iterate through a process ($n_{sim}$, the number of samples we are drawing, or simulation size) vs. the number of observations in each simulated dataset ($n_{obs}$, sample size).
 
 ## <!-- 2.4 -->**Example: Simulating a sampling distribution of the sample mean** Run the code below to create an empirical sampling distribution of the sample mean for 1000 samples of size 250. What happens to the sampling distirbution when the sample size goes down to 100? 50? 25?
+
+When sample size goes up, the distribution becomes more and more normal. 
 
 
 
