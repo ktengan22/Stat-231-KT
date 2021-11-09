@@ -304,7 +304,10 @@ ggplot(data.frame(means), aes(x = means)) +
 > 1. Fit each of the 100 bivariate models for the outcome as a function of a single predictor, then
 > 2. Include all of the significant predictors in the overall model
 
-> What does the distribution of the p-value for the overall test look like, assuming that there are *no* associations between any of the predictors and the outcome (all are assumed to be multivariate normal and independent).  Carry out a simulation to check your answer.
+> What does the distribution of the p-value for the overall test look like, assuming that there are *no* associations between any of the predictors and the outcome (all are assumed to be multivariate normal and independent).  Carry out a simulation to check your answer. 
+
+>There will be a set of varying p-values. Not unimodal and not normal because 
+they are randomized. Slightly constant. 
 
 ## <!-- 3.1 -->**Start small...** First, let's carry out a simulation that just looks at the distribution of the p-value for the test of a single predictor in a linear regression model with one predictor, assuming there is *no* association between the predictor and the outcome. Assume both the predictor and the outcome have standard Normal distributions. It's helpful to start with a simulation like this, where we *know* what to expect for the result, so we can use it as a check to make sure things are set-up/working correctly to start.
 
@@ -397,9 +400,9 @@ data.frame(pvalues) %>%
 
 ## <!-- 3.2-->**Then build up...** Now, let's add in 99 more potential predictors, so there are 100 predictors in all.  Assume none of the predictors are associated with the outcome OR each other.  Assume all predictors and the outcome are from standard Normal distributions. We want to know...
 
-> What is the probability of falsely rejecting $H_0$ for the first predictor at the $\alpha = 0.05$ significance level (empirical Type I error rate for $X_1$)?  
+> What is the probability of falsely rejecting $H_0$ for the first predictor at the $\alpha = 0.05$ significance level (empirical Type I error rate for $X_1$)?  5%
 > What is the probability of falsely rejecting $H_0$ for each of the other 99 predictors (on an individual basis) at the $\alpha = 0.05$ significance level (empirical Type I error rate for $X_2, \ldots, X_{100}$)?  
-> What is the probability that *at least one of the 100 predictors* is statistically significant at the $\alpha = 0.05$ level?
+> What is the probability that *at least one of the 100 predictors* is statistically significant at the $\alpha = 0.05$ level? Very low.
 
 ```{r}
 # Set the seed for reproducibility!
