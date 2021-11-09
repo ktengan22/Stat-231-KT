@@ -260,7 +260,7 @@ SELECT  Frequency,
         Absorbance,
         EarStatus
 FROM Measurements
-WHERE Idenitifier = 3
+WHERE Idenitifier = Rosowski_2012
 ```
 
 ```{r}
