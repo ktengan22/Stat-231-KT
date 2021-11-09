@@ -44,7 +44,7 @@ editor_options:
 # load packages
 library(tidyverse)
 library(kableExtra)
-
+library(dplyr)
 library(RMySQL)
 
 # set code chunk defaults
@@ -90,11 +90,15 @@ con <- dbConnect(MySQL(),
 
 # <!-- 1.1 -->What tables are included in the database (`con`)?
 
+Codebook, Measurements, Measurements pre 2020, PI info, PI info old, subjects
+
 ```{r}
 dbGetQuery(con, "SHOW TABLES")
 ```
 
 # <!-- 1.2 -->What is in the `PI_Info` table?
+
+identifier, year, authors, authorsshortlist, title, journal, URL, abstract
 
 ```{r}
 dbGetQuery(con, "EXPLAIN PI_Info")
@@ -110,6 +114,8 @@ dbGetQuery(con, "SELECT *
 
 # <!-- 1.4 -->How many observations are in the `PI_Info` table?
 
+25 observation 
+
 ```{r}
 dbGetQuery(con, "SELECT COUNT(*)
                  FROM PI_Info")
@@ -121,9 +127,18 @@ dbGetQuery(con, "SELECT COUNT(*) as num_obs
 
 # <!-- 1.5 -->Explore the `Measurements` and `Subjects` tables. What type of information is in each table?  How many observations are in each table?
 
+variable character, integers, floats. 1,349,667 observations in Measurements 
+and 3,147 observations in Subjects.
 
 
 ```{r}
+dbGetQuery(con, "EXPLAIN Measurements")
+dbGetQuery(con, "EXPLAIN Subjects")
+dbGetQuery(con, "SELECT COUNT(*)
+                 FROM Measurements")
+dbGetQuery(con, "SELECT COUNT(*)
+                 FROM Subjects")
+
 
 ```
 
@@ -140,7 +155,7 @@ class(PI_Info_sql)
 
 ## <!-- 2.2 -->The functions in **dplyr** are designed to translate automatically to SQL commands, but this is not true for other packages we've worked with. With this in mind, do you expect either block of code below to work? Why or why not?
  
-
+Block 2 would not work because tidyverse functions are not applicable to SQL. 
  
 ```{r, eval = FALSE}
 # Block 1
