@@ -197,7 +197,7 @@ PI_Info_df %>%
 
 ## <!-- 3.1 -->The R code chunk below shows a query using `dbGetQuery()` in R. The second code chunk shows the exact same query but in a SQL code chunk. Can you identify what the code is doing?
 
-
+The SQL chunk just works directly in the chunk
 
 **R code chunk**
 ```{r}
@@ -219,7 +219,7 @@ GROUP BY SessionTotal
 
 ## <!-- 3.2 -->The textbook tells us that the SQL equivalent of **dplyr**'s `filter()` is `WHERE`, but there is a similar SQL command called `HAVING`. When shoul you use `WHERE` vs. `HAVING`? You can use the code chunk below to help explain.
 
-
+If you group before you use WHERE vs if you group after you use HAVING.
 
 ```{sql, connection = con}
 SELECT  SessionTotal, COUNT(SessionTotal) as n,
@@ -242,7 +242,12 @@ HAVING avg_age < 25
 ## <!-- 3.3 -->Re-do the above query but include only those rows that have at least 10 subjects contributing (hint: update the `HAVING` line only). 
 
 ```{sql, connection = con}
-
+SELECT  SessionTotal, COUNT(SessionTotal) as n,
+        AVG(Sex = 'Female') as prop_fem,
+        AVG(AgeFirstMeasurement) as avg_age
+FROM Subjects
+GROUP BY SessionTotal
+HAVING n > 10
 ```
 
 <!-- Part 4 ------------------------------------------------------------------->
@@ -250,8 +255,12 @@ HAVING avg_age < 25
 
 ## <!-- 4.1 -->*Approach 1:* Use SQL code to query the appropriate table(s) (up to the point of creating the figure), and output the queried table as a dataframe by specificy the additional code chunk option `output.var = "your_desired_table_name"`. This will create an R data frame in your local environment called `your_desired_table_name`. Then switch to an R code chunk and use the outputted data frame to create the visualization of interest.
 
-```{sql, connection = con, output.var = "..."}
-
+```{sql, connection = con, output.var = "Hearing"}
+SELECT  Frequency,
+        Absorbance,
+        EarStatus
+FROM Measurements
+WHERE Idenitifier = 3
 ```
 
 ```{r}
