@@ -170,7 +170,7 @@ Describe what information is conveyed through data visualization #1 (that you'll
   
 ### Code and Output:  
 
-```{r Figure 1, eval = TRUE, fig.align='center'}
+```{r Figure 1, eval = TRUE, fig.align='center', fig.height = 3, fig.width = 4.5}
 #creating plot from data in data frame class_data, segment the class by activity
 
 ggplot(data = class_data, aes(fill = activity, y = overall_time, x = class)) +
@@ -202,7 +202,7 @@ Describe what information is conveyed through data visualization #2 (that you'll
   
 ### Code and Output:
 
-```{r Figure 2, fig.align='center', fig.height= 5, fig.width= 5}
+```{r Figure 2, fig.align='center', fig.height= 3, fig.width= 4.5}
 
 #create a time series separated by each overall activity
 ggplot(calendar_data, aes(x = date, y = time_hrs,
@@ -273,7 +273,7 @@ table <- calendar_data %>%
   #make aesthetically pleasing and change number of digits following decimal.
   kable(booktabs = TRUE, digits = 1, caption = "Activity Summary Statistics (Hrs)") %>% 
   #center and change font size
-  kable_styling(font_size = 15) 
+  kable_styling(font_size = 10) 
 
 #output table
 table
