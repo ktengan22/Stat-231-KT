@@ -366,17 +366,17 @@ nrow(nrc_missed_words)/nrow(poems_words)
 ##  <!-- 5.6 -->With these (rather important!) drawbacks in mind, let's go ahead and view the top words by sentiment classified by the NRC lexicon. That is, create a figure of the top 10 words under each sentiment, facetted by sentiment, for the following sentiments: anger, anticipation, fear, joy, surprise, and trust.  You can use code given in earlier chunks to guide you.
 
 ```{r}
-# poems_words %>%
-#   count(word, sort = TRUE) %>% 
-#   slice(1:10) %>%
-#   ggplot(aes(x = reorder(word, n), y = n, 
-#              color = word, fill = word)) +
-#   geom_col() +
-#   coord_flip() +
-#   guides(color = "none", fill = "none") +
-#   labs(x = NULL,
-#        y = "Number of instances",
-#        title = "The most common words in\nEmily Dickinson's poems")
+poems_words %>%
+  count(word, sort = TRUE) %>%
+  slice(1:10) %>%
+  ggplot(aes(x = reorder(word, n), y = n,
+             color = word, fill = word)) +
+  geom_col() +
+  coord_flip() +
+  guides(color = "none", fill = "none") +
+  labs(x = NULL,
+       y = "Number of instances",
+       title = "The most common words in\nEmily Dickinson's poems")
 
 set.seed(69)
 poems_subset <- sample(poems_words$words, size = 10)

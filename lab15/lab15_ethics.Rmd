@@ -1,6 +1,6 @@
 ---
 title: "Lab 15: Ethics discussion"
-author: "Solutions"
+author: "Kauila Tengan"
 date: "November 11, 2021"
 urlcolor: blue
 linkcolor: blue
